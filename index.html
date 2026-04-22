@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelMorph | Private Image Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        body { background: radial-gradient(circle at top left, #1e293b, #0f172a); min-height: 100vh; color: white; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-6">
+
+    <div class="max-w-xl w-full glass rounded-3xl p-8 shadow-2xl text-center">
+        <h1 class="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+            PixelMorph
+        </h1>
+        <p class="text-slate-400 mb-8">Fast, Private, Offline-Ready</p>
+
+        <div id="dropZone" class="border-2 border-dashed border-slate-600 rounded-2xl p-10 mb-6 cursor-pointer hover:border-blue-500 transition-colors group">
+            <input type="file" id="fileInput" class="hidden" accept="image/*">
+            <div class="text-slate-500 group-hover:text-blue-400 transition-colors">
+                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <p class="text-lg font-medium">Click or Drag Image Here</p>
+            </div>
+        </div>
+
+        <div id="controls" class="hidden space-y-6">
+            <img id="preview" class="max-h-48 mx-auto rounded-lg shadow-lg border border-slate-700">
+            
+            <div class="flex flex-col gap-4">
+                <label class="text-sm font-semibold text-slate-300">Convert To:</label>
+                <div class="flex justify-center gap-2">
+                    <button onclick="convert('image/png', 'png')" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-full font-bold transition-all">PNG</button>
+                    <button onclick="convert('image/jpeg', 'jpg')" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-full font-bold transition-all">JPG</button>
+                    <button onclick="convert('image/webp', 'webp')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-full font-bold transition-all">WebP</button>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="canvas" class="hidden"></canvas>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const controls = document.getElementById('controls');
+        const preview = document.getElementById('preview');
+        const canvas = document.getElementById('canvas');
+        let currentFile = null;
+
+        // File Selection Logic
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+        
+        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500'); };
+        dropZone.ondragleave = () => dropZone.classList.remove('border-blue-500');
+        dropZone.ondrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            currentFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                controls.classList.remove('hidden');
+                dropZone.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Conversion Logic (Client Side)
+        function convert(format, ext) {
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                const dataUrl = canvas.toDataURL(format, 0.9);
+                const link = document.createElement('a');
+                link.download = `pixelmorph-${Date.now()}.${ext}`;
+                link.href = dataUrl;
+                link.click();
+            };
+            img.src = preview.src;
+        }
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
