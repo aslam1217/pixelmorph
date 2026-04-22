@@ -3,131 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniPDF | The Private PDF Suite</title>
+    <title>OmniPDF | The All-In-One PDF Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        .tool-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.1); }
-        .tool-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3); }
-        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
+        .tool-card { @apply bg-slate-900 border border-slate-800 p-6 rounded-2xl cursor-pointer transition-all hover:border-blue-500 hover:-translate-y-1; }
+        .category-title { @apply text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 mt-8 first:mt-0; }
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
+<body class="p-6 md:p-12">
 
-    <nav class="glass-nav sticky top-0 z-50 border-b border-slate-800 p-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="showDashboard()">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">O</div>
-                <h1 class="text-xl font-black tracking-tighter">OMNIPDF</h1>
-            </div>
-            <span class="text-xs font-mono text-slate-500 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">CLIENT-SIDE ENCRYPTION ACTIVE</span>
+    <header class="max-w-6xl mx-auto mb-12 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-black text-white">Omni<span class="text-blue-500">PDF</span></h1>
+            <p class="text-slate-400">Professional PDF tools, 100% private.</p>
         </div>
-    </nav>
+        <div class="hidden md:block bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full border border-blue-500/20 text-sm">
+            Local Processing: ON
+        </div>
+    </header>
 
-    <main class="max-w-6xl mx-auto p-6">
+    <main class="max-w-6xl mx-auto">
         
-        <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div onclick="openTool('merge')" class="tool-card bg-slate-900 p-6 rounded-2xl cursor-pointer">
-                <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center mb-4 text-2xl">📑</div>
-                <h3 class="text-xl font-bold mb-2">Merge PDF</h3>
-                <p class="text-slate-400 text-sm">Combine multiple PDF files into one single document in seconds.</p>
+        <h2 class="category-title">Organize PDF</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div onclick="initTool('Merge')" class="tool-card">
+                <div class="text-2xl mb-2">📑</div>
+                <h3 class="font-bold">Merge PDF</h3>
+                <p class="text-xs text-slate-500">Combine multiple files.</p>
             </div>
-
-            <div onclick="openTool('convert')" class="tool-card bg-slate-900 p-6 rounded-2xl cursor-pointer">
-                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mb-4 text-2xl">🖼️</div>
-                <h3 class="text-xl font-bold mb-2">Image Converter</h3>
-                <p class="text-slate-400 text-sm">Convert bulk images to WebP or PNG. Perfect for web optimization.</p>
+            <div onclick="initTool('Split')" class="tool-card">
+                <div class="text-2xl mb-2">✂️</div>
+                <h3 class="font-bold">Split PDF</h3>
+                <p class="text-xs text-slate-500">Extract pages to separate files.</p>
             </div>
-
-            <div onclick="openTool('data')" class="tool-card bg-slate-900 p-6 rounded-2xl cursor-pointer border-dashed border-slate-700">
-                <div class="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mb-4 text-2xl">📊</div>
-                <h3 class="text-xl font-bold mb-2">CSV to JSON</h3>
-                <p class="text-slate-400 text-sm">Convert raw data files for API testing or database ingestion.</p>
+            <div onclick="initTool('Remove')" class="tool-card">
+                <div class="text-2xl mb-2">🗑️</div>
+                <h3 class="font-bold">Remove Pages</h3>
+                <p class="text-xs text-slate-500">Delete unwanted pages.</p>
             </div>
         </div>
 
-        <div id="tool-merge" class="hidden max-w-2xl mx-auto mt-10 bg-slate-900 p-8 rounded-3xl border border-slate-800">
-            <button onclick="showDashboard()" class="text-blue-400 mb-6 flex items-center gap-2">← Back to Dashboard</button>
-            <h2 class="text-3xl font-bold mb-6">Merge PDF Documents</h2>
-            <div class="border-2 border-dashed border-slate-700 rounded-xl p-10 text-center mb-6">
-                <input type="file" id="pdfFiles" multiple accept=".pdf" class="hidden">
-                <button onclick="document.getElementById('pdfFiles').click()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold">Select PDF Files</button>
-                <div id="pdfList" class="mt-4 text-slate-400 text-sm"></div>
+        <h2 class="category-title">Convert to PDF</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div onclick="initTool('JPGtoPDF')" class="tool-card">
+                <div class="text-2xl mb-2">🖼️</div>
+                <h3 class="font-bold">JPG to PDF</h3>
+                <p class="text-xs text-slate-500">Images to document.</p>
             </div>
-            <button onclick="mergePDFs()" id="mergeBtn" class="w-full bg-emerald-600 py-4 rounded-xl font-bold hidden">Merge & Download</button>
+            <div onclick="initTool('HTMLtoPDF')" class="tool-card">
+                <div class="text-2xl mb-2">🌐</div>
+                <h3 class="font-bold">HTML to PDF</h3>
+                <p class="text-xs text-slate-500">Webpages to document.</p>
+            </div>
         </div>
 
-        <div id="tool-data" class="hidden max-w-2xl mx-auto mt-10 bg-slate-900 p-8 rounded-3xl border border-slate-800">
-            <button onclick="showDashboard()" class="text-blue-400 mb-6 flex items-center gap-2">← Back to Dashboard</button>
-            <h2 class="text-3xl font-bold mb-6">CSV to JSON Converter</h2>
-            <textarea id="csvInput" placeholder="Paste your CSV data here..." class="w-full h-48 bg-slate-800 border border-slate-700 rounded-xl p-4 text-mono text-sm mb-4"></textarea>
-            <button onclick="convertCSV()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Process Data</button>
-            <pre id="jsonOutput" class="mt-4 p-4 bg-black rounded-xl text-xs overflow-auto max-h-64 hidden text-emerald-400"></pre>
+        <h2 class="category-title">Security</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div onclick="initTool('Protect')" class="tool-card">
+                <div class="text-2xl mb-2">🔒</div>
+                <h3 class="font-bold">Protect PDF</h3>
+                <p class="text-xs text-slate-500">Add password encryption.</p>
+            </div>
+            <div onclick="initTool('Unlock')" class="tool-card">
+                <div class="text-2xl mb-2">🔓</div>
+                <h3 class="font-bold">Unlock PDF</h3>
+                <p class="text-xs text-slate-500">Remove password security.</p>
+            </div>
         </div>
-
     </main>
 
-    <script>
-        const { PDFDocument } = PDFLib;
+    <div id="toolModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-xl rounded-3xl border border-slate-800 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="modalTitle" class="text-2xl font-bold">Tool Name</h2>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-white">✕</button>
+            </div>
+            <div id="modalContent" class="space-y-4">
+                <input type="file" id="mainFileInput" class="w-full bg-slate-800 p-4 rounded-xl border border-slate-700">
+                <div id="toolSettings" class="space-y-4"></div>
+                <button id="processBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold transition-all">Process Files</button>
+            </div>
+        </div>
+    </div>
 
-        function showDashboard() {
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.querySelectorAll('[id^="tool-"]').forEach(el => el.classList.add('hidden'));
-        }
-
-        function openTool(name) {
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('tool-' + name).classList.remove('hidden');
-        }
-
-        // --- PDF MERGE LOGIC ---
-        const pdfInput = document.getElementById('pdfFiles');
-        pdfInput.onchange = (e) => {
-            const list = document.getElementById('pdfList');
-            list.innerText = e.target.files.length + " files selected ready for merging.";
-            document.getElementById('mergeBtn').classList.remove('hidden');
-        };
-
-        async function mergePDFs() {
-            const files = pdfInput.files;
-            const mergedPdf = await PDFDocument.create();
-            
-            for (const file of files) {
-                const bytes = await file.arrayBuffer();
-                const pdf = await PDFDocument.load(bytes);
-                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
-            }
-
-            const pdfBytes = await mergedPdf.save();
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = "merged_document.pdf";
-            link.click();
-        }
-
-        // --- CSV TO JSON LOGIC (For your Data Portfolio) ---
-        function convertCSV() {
-            const csv = document.getElementById('csvInput').value;
-            const lines = csv.split("\n");
-            const result = [];
-            const headers = lines[0].split(",");
-
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i]) continue;
-                const obj = {};
-                const currentline = lines[i].split(",");
-                headers.forEach((h, index) => obj[h.trim()] = currentline[index]?.trim());
-                result.push(obj);
-            }
-
-            const output = document.getElementById('jsonOutput');
-            output.innerText = JSON.stringify(result, null, 2);
-            output.classList.remove('hidden');
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
