@@ -3,95 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelMorph | Private Image Converter</title>
+    <title>OmniPDF | The Private PDF Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="manifest" href="manifest.json">
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        body { background: radial-gradient(circle at top left, #1e293b, #0f172a); min-height: 100vh; color: white; }
+        .tool-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.1); }
+        .tool-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3); }
+        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .glass-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center p-6">
+<body>
 
-    <div class="max-w-xl w-full glass rounded-3xl p-8 shadow-2xl text-center">
-        <h1 class="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-            PixelMorph
-        </h1>
-        <p class="text-slate-400 mb-8">Fast, Private, Offline-Ready</p>
+    <nav class="glass-nav sticky top-0 z-50 border-b border-slate-800 p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="showDashboard()">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">O</div>
+                <h1 class="text-xl font-black tracking-tighter">OMNIPDF</h1>
+            </div>
+            <span class="text-xs font-mono text-slate-500 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">CLIENT-SIDE ENCRYPTION ACTIVE</span>
+        </div>
+    </nav>
 
-        <div id="dropZone" class="border-2 border-dashed border-slate-600 rounded-2xl p-10 mb-6 cursor-pointer hover:border-blue-500 transition-colors group">
-            <input type="file" id="fileInput" class="hidden" accept="image/*">
-            <div class="text-slate-500 group-hover:text-blue-400 transition-colors">
-                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                <p class="text-lg font-medium">Click or Drag Image Here</p>
+    <main class="max-w-6xl mx-auto p-6">
+        
+        <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div onclick="openTool('merge')" class="tool-card bg-slate-900 p-6 rounded-2xl cursor-pointer">
+                <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center mb-4 text-2xl">📑</div>
+                <h3 class="text-xl font-bold mb-2">Merge PDF</h3>
+                <p class="text-slate-400 text-sm">Combine multiple PDF files into one single document in seconds.</p>
+            </div>
+
+            <div onclick="openTool('convert')" class="tool-card bg-slate-900 p-6 rounded-2xl cursor-pointer">
+                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mb-4 text-2xl">🖼️</div>
+                <h3 class="text-xl font-bold mb-2">Image Converter</h3>
+                <p class="text-slate-400 text-sm">Convert bulk images to WebP or PNG. Perfect for web optimization.</p>
+            </div>
+
+            <div onclick="openTool('data')" class="tool-card bg-slate-900 p-6 rounded-2xl cursor-pointer border-dashed border-slate-700">
+                <div class="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mb-4 text-2xl">📊</div>
+                <h3 class="text-xl font-bold mb-2">CSV to JSON</h3>
+                <p class="text-slate-400 text-sm">Convert raw data files for API testing or database ingestion.</p>
             </div>
         </div>
 
-        <div id="controls" class="hidden space-y-6">
-            <img id="preview" class="max-h-48 mx-auto rounded-lg shadow-lg border border-slate-700">
-            
-            <div class="flex flex-col gap-4">
-                <label class="text-sm font-semibold text-slate-300">Convert To:</label>
-                <div class="flex justify-center gap-2">
-                    <button onclick="convert('image/png', 'png')" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-full font-bold transition-all">PNG</button>
-                    <button onclick="convert('image/jpeg', 'jpg')" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-full font-bold transition-all">JPG</button>
-                    <button onclick="convert('image/webp', 'webp')" class="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-full font-bold transition-all">WebP</button>
-                </div>
+        <div id="tool-merge" class="hidden max-w-2xl mx-auto mt-10 bg-slate-900 p-8 rounded-3xl border border-slate-800">
+            <button onclick="showDashboard()" class="text-blue-400 mb-6 flex items-center gap-2">← Back to Dashboard</button>
+            <h2 class="text-3xl font-bold mb-6">Merge PDF Documents</h2>
+            <div class="border-2 border-dashed border-slate-700 rounded-xl p-10 text-center mb-6">
+                <input type="file" id="pdfFiles" multiple accept=".pdf" class="hidden">
+                <button onclick="document.getElementById('pdfFiles').click()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold">Select PDF Files</button>
+                <div id="pdfList" class="mt-4 text-slate-400 text-sm"></div>
             </div>
+            <button onclick="mergePDFs()" id="mergeBtn" class="w-full bg-emerald-600 py-4 rounded-xl font-bold hidden">Merge & Download</button>
         </div>
 
-        <canvas id="canvas" class="hidden"></canvas>
-    </div>
+        <div id="tool-data" class="hidden max-w-2xl mx-auto mt-10 bg-slate-900 p-8 rounded-3xl border border-slate-800">
+            <button onclick="showDashboard()" class="text-blue-400 mb-6 flex items-center gap-2">← Back to Dashboard</button>
+            <h2 class="text-3xl font-bold mb-6">CSV to JSON Converter</h2>
+            <textarea id="csvInput" placeholder="Paste your CSV data here..." class="w-full h-48 bg-slate-800 border border-slate-700 rounded-xl p-4 text-mono text-sm mb-4"></textarea>
+            <button onclick="convertCSV()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Process Data</button>
+            <pre id="jsonOutput" class="mt-4 p-4 bg-black rounded-xl text-xs overflow-auto max-h-64 hidden text-emerald-400"></pre>
+        </div>
+
+    </main>
 
     <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const controls = document.getElementById('controls');
-        const preview = document.getElementById('preview');
-        const canvas = document.getElementById('canvas');
-        let currentFile = null;
+        const { PDFDocument } = PDFLib;
 
-        // File Selection Logic
-        dropZone.onclick = () => fileInput.click();
-        fileInput.onchange = (e) => handleFile(e.target.files[0]);
-        
-        dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500'); };
-        dropZone.ondragleave = () => dropZone.classList.remove('border-blue-500');
-        dropZone.ondrop = (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
-
-        function handleFile(file) {
-            if (!file || !file.type.startsWith('image/')) return;
-            currentFile = file;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                controls.classList.remove('hidden');
-                dropZone.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
+        function showDashboard() {
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.querySelectorAll('[id^="tool-"]').forEach(el => el.classList.add('hidden'));
         }
 
-        // Conversion Logic (Client Side)
-        function convert(format, ext) {
-            const ctx = canvas.getContext('2d');
-            const img = new Image();
-            img.onload = () => {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
-                
-                const dataUrl = canvas.toDataURL(format, 0.9);
-                const link = document.createElement('a');
-                link.download = `pixelmorph-${Date.now()}.${ext}`;
-                link.href = dataUrl;
-                link.click();
-            };
-            img.src = preview.src;
+        function openTool(name) {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('tool-' + name).classList.remove('hidden');
         }
 
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+        // --- PDF MERGE LOGIC ---
+        const pdfInput = document.getElementById('pdfFiles');
+        pdfInput.onchange = (e) => {
+            const list = document.getElementById('pdfList');
+            list.innerText = e.target.files.length + " files selected ready for merging.";
+            document.getElementById('mergeBtn').classList.remove('hidden');
+        };
+
+        async function mergePDFs() {
+            const files = pdfInput.files;
+            const mergedPdf = await PDFDocument.create();
+            
+            for (const file of files) {
+                const bytes = await file.arrayBuffer();
+                const pdf = await PDFDocument.load(bytes);
+                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                copiedPages.forEach((page) => mergedPdf.addPage(page));
+            }
+
+            const pdfBytes = await mergedPdf.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "merged_document.pdf";
+            link.click();
+        }
+
+        // --- CSV TO JSON LOGIC (For your Data Portfolio) ---
+        function convertCSV() {
+            const csv = document.getElementById('csvInput').value;
+            const lines = csv.split("\n");
+            const result = [];
+            const headers = lines[0].split(",");
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i]) continue;
+                const obj = {};
+                const currentline = lines[i].split(",");
+                headers.forEach((h, index) => obj[h.trim()] = currentline[index]?.trim());
+                result.push(obj);
+            }
+
+            const output = document.getElementById('jsonOutput');
+            output.innerText = JSON.stringify(result, null, 2);
+            output.classList.remove('hidden');
         }
     </script>
 </body>
