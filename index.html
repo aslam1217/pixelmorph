@@ -389,4 +389,1557 @@
             background: var(--surface-2); border: 1.5px solid var(--border);
             transition: border-color var(--ease);
         }
-        .pc:hover { border-color:
+        .pc:hover { border-color:var(--border-2); }
+        .pc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pc-lbl {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,.72); color: #fff;
+            font-size: .65rem; font-weight: 600; padding: 5px 6px;
+            text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .pc-btn {
+            position: absolute; width: 26px; height: 26px; border-radius: 50%;
+            background: #fff; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,.22);
+            transition: transform var(--ease);
+        }
+        .pc-btn:hover { transform: scale(1.12); }
+        .pc-btn.rm  { top: 6px; right: 6px; color: #EF4444; }
+        .pc-btn.rot { top: 6px; left:  6px; color: var(--brand); }
+        .pc.selected { border-color: #7C3AED !important; box-shadow: 0 0 0 3px rgba(124,58,237,.22); }
+        .sel-check {
+            position: absolute; top: 6px; right: 6px;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #7C3AED; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 6px rgba(124,58,237,.4);
+        }
+        .pc.doc-full {
+            aspect-ratio: unset; min-height: 200px; grid-column: 1 / -1;
+            flex-direction: column; gap: 10px; padding: 36px;
+            cursor: default; border-style: dashed;
+        }
+
+        /* ═══════════════════════════════════════════
+           BUTTONS
+        ═══════════════════════════════════════════ */
+        .btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-family: inherit; font-size: .875rem; font-weight: 700;
+            padding: 9px 18px; border-radius: var(--r-sm); border: none;
+            cursor: pointer; transition: all var(--ease); white-space: nowrap; text-decoration: none;
+        }
+        .btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+        .btn:disabled { opacity: .6; cursor: not-allowed; pointer-events: none; }
+        .btn-sm { padding: 7px 14px; font-size: .8rem; }
+
+        .b-primary { background: var(--brand); color: #fff; }
+        .b-primary:hover:not(:disabled) { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(15,118,110,.3); }
+
+        .b-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+        .b-outline:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); background: var(--brand-xlight); }
+
+        .b-ghost { background: transparent; color: var(--muted); padding: 8px 12px; }
+        .b-ghost:hover:not(:disabled) { color: var(--text); background: var(--surface-2); }
+
+        .b-slate { background: #475569; color: #fff; }
+        .b-slate:hover:not(:disabled) { background: #334155; transform: translateY(-1px); }
+        .b-violet { background: #7C3AED; color: #fff; }
+        .b-violet:hover:not(:disabled) { background: #6D28D9; transform: translateY(-1px); }
+        .b-green  { background: #16A34A; color: #fff; }
+        .b-green:hover:not(:disabled)  { background: #15803d; transform: translateY(-1px); }
+        .b-sky    { background: #0284C7; color: #fff; }
+        .b-sky:hover:not(:disabled)    { background: #0369a1; transform: translateY(-1px); }
+        .b-indigo { background: #4F46E5; color: #fff; }
+        .b-indigo:hover:not(:disabled) { background: #4338CA; transform: translateY(-1px); }
+        .b-rose   { background: #E11D48; color: #fff; }
+        .b-rose:hover:not(:disabled)   { background: #BE123C; transform: translateY(-1px); }
+        .b-orange { background: #EA580C; color: #fff; }
+        .b-orange:hover:not(:disabled) { background: #C2410C; transform: translateY(-1px); }
+        .b-red    { background: #DC2626; color: #fff; }
+        .b-red:hover:not(:disabled)    { background: #B91C1C; transform: translateY(-1px); }
+        .b-emerald { background: #059669; color: #fff; }
+        .b-emerald:hover:not(:disabled){ background: #047857; transform: translateY(-1px); }
+
+        /* Form inputs */
+        .finp {
+            background: var(--surface); border: 1.5px solid var(--border);
+            border-radius: 8px; color: var(--text);
+            font-family: inherit; font-size: .875rem; padding: 8px 12px;
+            transition: border-color var(--ease), box-shadow var(--ease);
+        }
+        .finp:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(15,118,110,.1); }
+
+        /* Password show/hide */
+        .pw-wrap { position: relative; }
+        .pw-eye {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; color: var(--muted);
+            padding: 2px; display: flex; align-items: center;
+        }
+        .pw-eye:hover { color: var(--text); }
+
+        /* Spinner */
+        .spinner {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 3px solid rgba(15,118,110,.15);
+            border-top-color: var(--brand);
+            animation: spin .75s linear infinite; margin: auto; flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ═══════════════════════════════════════════
+           TOAST NOTIFICATIONS
+        ═══════════════════════════════════════════ */
+        #toast-root {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .toast {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 14px 16px; border-radius: 12px;
+            max-width: 380px; min-width: 260px;
+            font-size: .875rem; font-weight: 500; line-height: 1.4;
+            box-shadow: 0 8px 32px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.14);
+            pointer-events: all;
+            opacity: 1; transform: translateX(0);
+            transition: opacity .28s ease, transform .28s ease;
+        }
+        .toast.toast-out { opacity: 0; transform: translateX(18px); }
+        .t-ok   { background: #064E3B; color: #A7F3D0; }
+        .t-err  { background: #7F1D1D; color: #FCA5A5; }
+        .t-warn { background: #78350F; color: #FDE68A; }
+        .t-info { background: #1E3A5F; color: #BFDBFE; }
+        .toast-msg { flex: 1; }
+        .toast-x {
+            flex-shrink: 0; background: none; border: none;
+            cursor: pointer; color: inherit; opacity: .6; padding: 0;
+            display: flex; align-items: center; margin-left: 4px;
+        }
+        .toast-x:hover { opacity: 1; }
+        @media (max-width: 480px) {
+            #toast-root { bottom: 16px; right: 12px; left: 12px; }
+            .toast { min-width: unset; max-width: 100%; }
+        }
+
+        /* ═══════════════════════════════════════════
+           FOOTER
+        ═══════════════════════════════════════════ */
+        .site-footer {
+            border-top: 1.5px solid var(--border);
+            background: var(--surface); margin-top: 8px;
+        }
+        .footer-inner { max-width: 1200px; margin: 0 auto; padding: 44px 24px 28px; }
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 36px; margin-bottom: 36px;
+        }
+        @media (min-width: 768px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
+        .fc h4 { font-size: .8rem; font-weight: 800; color: var(--text); margin-bottom: 14px; letter-spacing: .02em; }
+        .fc a, .fc .fi {
+            font-size: .8rem; color: var(--muted); display: block;
+            margin-bottom: 8px; text-decoration: none; transition: color var(--ease); list-style: none;
+        }
+        .fc a:hover { color: var(--brand); }
+        .footer-bottom {
+            border-top: 1px solid var(--border); padding-top: 20px;
+            text-align: center; font-size: .8rem; color: var(--muted);
+        }
+
+        /* ═══════════════════════════════════════════
+           MISC
+        ═══════════════════════════════════════════ */
+        @media (max-width: 479px) {
+            .hero { padding: 36px 4px 28px; }
+            .upload-card-hdr { padding: 22px 18px 18px; }
+            #drop-zone { margin: 14px; padding: 36px 18px; }
+            .ws-hdr { padding: 12px 14px; }
+            #sortable-grid { padding: 14px 14px; gap: 10px; }
+            .features-block { padding: 26px 18px; }
+            .faq-item summary { padding: 14px 18px; }
+            .faq-item p { padding: 0 18px 14px; }
+            .faq-hdr { padding: 14px 18px; }
+            .sp { padding: 12px 14px; }
+        }
+        @media (max-width: 639px) {
+            .ws-hdr { flex-direction: column; align-items: flex-start; }
+            .ws-acts { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Skip nav -->
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- Toast container -->
+<div id="toast-root" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<!-- ═══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="site-header" role="banner">
+    <div class="hdr">
+        <a class="logo" href="/" onclick="navigateTo('/');return false" aria-label="pdflu — go to home">
+            <div class="logo-icon">
+                <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <span class="logo-name">pdf<span>lu</span></span>
+        </a>
+        <p class="hdr-tag">Every PDF tool you need — fast, private, free.</p>
+        <button class="theme-toggle" id="theme-btn" onclick="toggleDark()" aria-label="Toggle dark mode" title="Toggle dark / light mode">
+            <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+            <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 100 10A5 5 0 0012 7z"/>
+            </svg>
+        </button>
+    </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════ -->
+<main id="main-content" tabindex="-1">
+<div class="container">
+
+    <!-- ─────────────────────────────────────────
+         VIEW: TOOLS HOME
+    ───────────────────────────────────────── -->
+    <div id="view-tools">
+
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Everything you need to work<br>with PDFs — <em>free.</em></h1>
+            <p>Pick a tool and get started instantly. All processing happens inside your browser.<br>Your files never touch a server.</p>
+            <div class="badges">
+                <span class="badge">🔒 100% Private</span>
+                <span class="badge">⚡ No Sign-up</span>
+                <span class="badge">🆓 Always Free</span>
+                <span class="badge">📱 Works Everywhere</span>
+            </div>
+        </div>
+
+        <!-- ORGANIZE -->
+        <div class="t-section">
+            <div class="t-label-row">
+                <span class="t-label">Organize</span>
+                <div class="t-rule"></div>
+            </div>
+            <div class="tools-grid">
+
+                <div class="tool-card" onclick="navigateTo('/merge-pdf')" role="button" tabindex="0"
+                     aria-label="Merge PDF – combine multiple PDFs into one" title="Combine multiple PDFs into one file">
+                    <div class="tc-icon" style="background:#EEF2FF">
+                        <svg class="w-6 h-6" style="color:#4F46E5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Merge PDF</span>
+                    <span class="tc-desc">Combine multiple PDFs into one</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/split-pdf')" role="button" tabindex="0"
+                     aria-label="Split PDF – extract pages from a PDF" title="Extract pages from a PDF">
+                    <div class="tc-icon" style="background:#F5F3FF">
+                        <svg class="w-6 h-6" style="color:#7C3AED" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Split PDF</span>
+                    <span class="tc-desc">Extract pages from a PDF</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- EDIT & FORMAT -->
+        <div class="t-section">
+            <div class="t-label-row">
+                <span class="t-label">Edit &amp; Format</span>
+                <div class="t-rule"></div>
+            </div>
+            <div class="tools-grid">
+
+                <div class="tool-card" onclick="navigateTo('/rotate-pdf')" role="button" tabindex="0"
+                     aria-label="Rotate PDF – fix page orientation" title="Fix page orientation">
+                    <div class="tc-icon" style="background:#F1F5F9">
+                        <svg class="w-6 h-6" style="color:#475569" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Rotate PDF</span>
+                    <span class="tc-desc">Fix page orientation</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/page-numbers')" role="button" tabindex="0"
+                     aria-label="Add page numbers to PDF" title="Add numbered pages to a PDF">
+                    <div class="tc-icon" style="background:#F0FDF4">
+                        <svg class="w-6 h-6" style="color:#16A34A" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Page Numbers</span>
+                    <span class="tc-desc">Add numbering to pages</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/watermark-pdf')" role="button" tabindex="0"
+                     aria-label="Watermark PDF – stamp text on all pages" title="Stamp text on all pages">
+                    <div class="tc-icon" style="background:#F0F9FF">
+                        <svg class="w-6 h-6" style="color:#0284C7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Watermark PDF</span>
+                    <span class="tc-desc">Stamp text on all pages</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CONVERT -->
+        <div class="t-section">
+            <div class="t-label-row">
+                <span class="t-label">Convert</span>
+                <div class="t-rule"></div>
+            </div>
+            <div class="tools-grid">
+
+                <div class="tool-card" onclick="navigateTo('/image-to-pdf')" role="button" tabindex="0"
+                     aria-label="Image to PDF – convert JPG or PNG to PDF" title="Convert JPG/PNG images to a PDF">
+                    <div class="tc-icon" style="background:#EEF2FF">
+                        <svg class="w-6 h-6" style="color:#4F46E5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Image to PDF</span>
+                    <span class="tc-desc">JPG / PNG → PDF</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/pdf-to-images')" role="button" tabindex="0"
+                     aria-label="PDF to Images – convert PDF pages to PNG" title="Convert PDF pages to PNG images">
+                    <div class="tc-icon" style="background:#FFF1F2">
+                        <svg class="w-6 h-6" style="color:#E11D48" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">PDF to Images</span>
+                    <span class="tc-desc">PDF → PNG / JPG (ZIP)</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/pdf-to-word')" role="button" tabindex="0"
+                     aria-label="PDF to Word – convert PDF to DOCX" title="Convert PDF to an editable Word document">
+                    <div class="tc-icon" style="background:#FFF7ED">
+                        <svg class="w-6 h-6" style="color:#EA580C" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">PDF to Word</span>
+                    <span class="tc-desc">PDF → .docx (via API)</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/word-to-pdf')" role="button" tabindex="0"
+                     aria-label="Word to PDF – convert DOCX to PDF" title="Convert Word document to PDF">
+                    <div class="tc-icon" style="background:#F0FDFA">
+                        <svg class="w-6 h-6" style="color:#0f766e" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Word to PDF</span>
+                    <span class="tc-desc">.doc / .docx → PDF (via API)</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="t-section">
+            <div class="t-label-row">
+                <span class="t-label">Security</span>
+                <div class="t-rule"></div>
+            </div>
+            <div class="tools-grid">
+
+                <div class="tool-card" onclick="navigateTo('/lock-pdf')" role="button" tabindex="0"
+                     aria-label="Lock PDF – protect with password" title="Protect PDF with a password">
+                    <div class="tc-icon" style="background:#FFF1F2">
+                        <svg class="w-6 h-6" style="color:#BE123C" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Lock PDF</span>
+                    <span class="tc-desc">Add password protection</span>
+                </div>
+
+                <div class="tool-card" onclick="navigateTo('/unlock-pdf')" role="button" tabindex="0"
+                     aria-label="Unlock PDF – remove password" title="Remove PDF password protection">
+                    <div class="tc-icon" style="background:#F0FDF4">
+                        <svg class="w-6 h-6" style="color:#16A34A" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <span class="tc-name">Unlock PDF</span>
+                    <span class="tc-desc">Remove password protection</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Features -->
+        <section class="features-block" aria-labelledby="why-pdflu">
+            <h2 id="why-pdflu" class="sr-only">Why pdflu</h2>
+            <div class="features-grid">
+                <div class="feat">
+                    <h3>🔒 100% Private &amp; Secure</h3>
+                    <p>Unlike iLovePDF, Sejda, or Smallpdf, pdflu never sends your files to any server. All processing happens locally inside your browser — your documents never leave your device. (PDF↔Word conversions use your own local API server only.)</p>
+                </div>
+                <div class="feat">
+                    <h3>⚡ No Sign-up. Completely Free.</h3>
+                    <p>pdflu is a free online PDF toolkit with no account, no watermarks on output, and no file-size limits. Merge, split, rotate, watermark, convert and more — free, forever.</p>
+                </div>
+                <div class="feat">
+                    <h3>🌐 Works in Any Browser</h3>
+                    <p>Works on Chrome, Firefox, Safari, and Edge — on desktop or mobile. No software to install. A powerful free alternative to Adobe Acrobat Online, PDF24, iLovePDF, and Smallpdf.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq-block" aria-labelledby="faq-hdr">
+            <div class="faq-hdr"><h2 id="faq-hdr" style="font-size:inherit;font-weight:inherit;margin:0">Frequently Asked Questions</h2></div>
+
+            <details class="faq-item">
+                <summary>Is pdflu really free to use?
+                    <svg class="faq-chev w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </summary>
+                <p>Yes — completely free, forever. Every tool (merge, split, rotate, watermark, page numbers, image conversion, PDF to Word, Word to PDF, lock &amp; unlock) is available at no cost with no registration required.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Are my PDF files safe with pdflu?
+                    <svg class="faq-chev w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </summary>
+                <p>Most tools run 100% client-side using pdf-lib and PDF.js — nothing leaves your browser. PDF to Word and Word to PDF send files only to your own localhost Python server, not to any external service.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>How do I merge multiple PDF files?
+                    <svg class="faq-chev w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </summary>
+                <p>Click "Merge PDF", upload your files, drag to reorder if needed, then click "Merge Files". Your combined PDF downloads instantly — no server required.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>How does PDF to Word / Word to PDF work?
+                    <svg class="faq-chev w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </summary>
+                <p>These tools require a Python FastAPI backend running locally on port 8000. The frontend sends your file to <code>localhost:8000/api/pdf-to-word</code> or <code>/api/word-to-pdf</code> and downloads the result. Run it with <code>uvicorn server:app --reload</code>.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Is pdflu a good alternative to iLovePDF or Smallpdf?
+                    <svg class="faq-chev w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </summary>
+                <p>Yes. pdflu offers the same core tools as iLovePDF, Sejda, Smallpdf, PDF24, and Adobe Acrobat Online — with one key advantage: your files never leave your browser.</p>
+            </details>
+        </section>
+
+    </div><!-- /view-tools -->
+
+
+    <!-- ─────────────────────────────────────────
+         VIEW: UPLOAD
+    ───────────────────────────────────────── -->
+    <div id="view-upload" class="hidden">
+    <div class="upload-wrap">
+
+        <button class="back-btn" onclick="navigateTo('/')" aria-label="Back to all tools">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+            Back to Tools
+        </button>
+
+        <div class="upload-card">
+            <div class="upload-card-hdr">
+                <h2 id="upload-tool-name">Tool Name</h2>
+                <p id="upload-tool-desc">Upload the files you want to process.</p>
+            </div>
+
+            <div id="drop-zone" role="button" tabindex="0" aria-label="Drop files here or click to browse">
+                <div class="dz-circle">
+                    <svg class="w-9 h-9" style="color:white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                </div>
+                <p class="dz-title">Drag &amp; drop files here</p>
+                <p class="dz-sub">or click to browse from your computer</p>
+                <input type="file" id="file-input" class="hidden" accept=".pdf" multiple aria-label="File upload">
+            </div>
+        </div>
+
+    </div>
+    </div><!-- /view-upload -->
+
+
+    <!-- ─────────────────────────────────────────
+         VIEW: WORKSPACE
+    ───────────────────────────────────────── -->
+    <div id="view-workspace" class="hidden">
+    <div class="ws-card">
+
+        <!-- Workspace header -->
+        <div class="ws-hdr">
+            <div class="ws-left">
+                <button class="btn b-ghost btn-sm" onclick="clearWorkspace()" aria-label="Start over — go back to upload">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                    Start Over
+                </button>
+                <div>
+                    <div class="ws-tname" id="workspace-tool-name">Tool</div>
+                    <div class="ws-tdesc" id="workspace-tool-desc">Review your files and apply changes.</div>
+                </div>
+            </div>
+
+            <div class="ws-acts">
+                <!-- Secondary action buttons (conditionally shown) -->
+                <button id="btn-add-more" onclick="document.getElementById('file-input').click()" class="hidden btn b-outline btn-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    Add Files
+                </button>
+                <button id="btn-rotate-all" onclick="rotateAllVisual()" class="hidden btn b-outline btn-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Rotate All
+                </button>
+                <button id="btn-select-all" onclick="selectAllPages()" class="hidden btn b-outline btn-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Toggle All
+                </button>
+
+                <!-- Execute buttons — only one visible at a time -->
+                <button id="btn-execute-merge" class="hidden btn b-primary">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    <span id="merge-btn-text">Merge Files</span>
+                </button>
+                <button id="btn-execute-rotate" class="hidden btn b-slate">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span id="rotate-btn-text">Save Changes</span>
+                </button>
+                <button id="btn-execute-split" class="hidden btn b-violet">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+                    <span id="split-btn-text">Extract Selected</span>
+                </button>
+                <button id="btn-execute-pagenumbers" class="hidden btn b-green">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                    <span id="pagenum-btn-text">Apply Numbers</span>
+                </button>
+                <button id="btn-execute-watermark" class="hidden btn b-sky">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                    <span id="watermark-btn-text">Stamp PDF</span>
+                </button>
+                <button id="btn-execute-image" class="hidden btn b-indigo">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span id="image-btn-text">Convert Images</span>
+                </button>
+                <button id="btn-execute-pdf2img" class="hidden btn b-rose">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    <span id="pdf2img-btn-text">Download ZIP</span>
+                </button>
+                <button id="btn-execute-pdf2word" class="hidden btn b-orange">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span id="pdf2word-btn-text">Convert to Word</span>
+                </button>
+                <button id="btn-execute-word2pdf" class="hidden btn b-primary">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/></svg>
+                    <span id="word2pdf-btn-text">Convert to PDF</span>
+                </button>
+                <button id="btn-execute-lock" class="hidden btn b-red">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span id="lock-btn-text">Lock PDF</span>
+                </button>
+                <button id="btn-execute-unlock" class="hidden btn b-emerald">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+                    <span id="unlock-btn-text">Unlock PDF</span>
+                </button>
+            </div>
+        </div><!-- /ws-hdr -->
+
+        <!-- Split: page range input -->
+        <div id="split-range-container" class="hidden sp" style="background:rgba(124,58,237,.04);border-bottom-color:rgba(124,58,237,.15)">
+            <span class="sp-label" style="color:#7C3AED">Select pages by range</span>
+            <div class="sp-row" style="align-items:center">
+                <input type="text" id="split-range-input" class="finp" style="flex:1;max-width:340px;border-color:rgba(124,58,237,.3)"
+                       placeholder="e.g. 1-5, 8, 11-13" aria-label="Page range input">
+                <button onclick="applyPageRange()" class="btn b-violet btn-sm">Apply</button>
+            </div>
+        </div>
+
+        <!-- Page numbers: settings -->
+        <div id="pagenum-settings-container" class="hidden sp" style="background:rgba(22,163,74,.04);border-bottom-color:rgba(22,163,74,.15)">
+            <span class="sp-label" style="color:#16A34A">Page Number Settings</span>
+            <div class="sp-row">
+                <div class="sp-field">
+                    <label for="pagenum-position">Position</label>
+                    <select id="pagenum-position" class="finp" style="min-width:160px;border-color:rgba(22,163,74,.3)">
+                        <option value="bottom-center">Bottom Center</option>
+                        <option value="bottom-right">Bottom Right</option>
+                        <option value="top-center">Top Center</option>
+                        <option value="top-right">Top Right</option>
+                    </select>
+                </div>
+                <div class="sp-field">
+                    <label for="pagenum-start" title="First physical page to number">Begin on Page</label>
+                    <input type="number" id="pagenum-start" min="1" value="1" class="finp" style="width:88px;text-align:center;border-color:rgba(22,163,74,.3)">
+                </div>
+                <div class="sp-field">
+                    <label for="pagenum-start-value" title="Number printed on the first numbered page">Start Number</label>
+                    <input type="number" id="pagenum-start-value" min="1" value="1" class="finp" style="width:88px;text-align:center;border-color:rgba(22,163,74,.3)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Watermark: settings -->
+        <div id="watermark-settings-container" class="hidden sp" style="background:rgba(2,132,199,.04);border-bottom-color:rgba(2,132,199,.15)">
+            <span class="sp-label" style="color:#0284C7">Watermark Text</span>
+            <input type="text" id="watermark-text" value="CONFIDENTIAL" maxlength="50"
+                   class="finp" style="width:300px;border-color:rgba(2,132,199,.3)" placeholder="Enter watermark text">
+        </div>
+
+        <!-- Lock / Unlock: password -->
+        <div id="password-settings-container" class="hidden sp" style="background:rgba(190,18,60,.04);border-bottom-color:rgba(190,18,60,.15)">
+            <span class="sp-label" style="color:#BE123C">Password</span>
+            <div class="sp-row">
+                <div class="sp-field">
+                    <label for="pdf-password">Password</label>
+                    <div class="pw-wrap">
+                        <input type="password" id="pdf-password" class="finp" style="width:210px;padding-right:36px;border-color:rgba(190,18,60,.3)"
+                               placeholder="Enter password" autocomplete="new-password">
+                        <button type="button" class="pw-eye" onclick="togglePw('pdf-password',this)" aria-label="Toggle password visibility">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="sp-field" id="confirm-password-wrapper">
+                    <label for="pdf-password-confirm">Confirm Password</label>
+                    <div class="pw-wrap">
+                        <input type="password" id="pdf-password-confirm" class="finp" style="width:210px;padding-right:36px;border-color:rgba(190,18,60,.3)"
+                               placeholder="Confirm password" autocomplete="new-password">
+                        <button type="button" class="pw-eye" onclick="togglePw('pdf-password-confirm',this)" aria-label="Toggle confirm password visibility">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API notice -->
+        <div id="api-notice-container" class="hidden api-notice">
+            <strong>⚠️ Backend required:</strong> This tool needs a Python FastAPI server on
+            <code>localhost:8000</code>. Start it with <code>uvicorn server:app --reload</code> before converting.
+        </div>
+
+        <!-- Page / file grid -->
+        <div id="sortable-grid"></div>
+
+    </div>
+    </div><!-- /view-workspace -->
+
+</div><!-- /container -->
+</main>
+
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <div class="fc">
+                <h4>PDF Tools</h4>
+                <a href="/merge-pdf"    onclick="navigateTo('/merge-pdf');return false">Merge PDF</a>
+                <a href="/split-pdf"    onclick="navigateTo('/split-pdf');return false">Split PDF</a>
+                <a href="/rotate-pdf"   onclick="navigateTo('/rotate-pdf');return false">Rotate PDF</a>
+                <a href="/page-numbers" onclick="navigateTo('/page-numbers');return false">Add Page Numbers</a>
+                <a href="/watermark-pdf" onclick="navigateTo('/watermark-pdf');return false">Watermark PDF</a>
+            </div>
+            <div class="fc">
+                <h4>Convert &amp; Security</h4>
+                <a href="/image-to-pdf"   onclick="navigateTo('/image-to-pdf');return false">Image to PDF</a>
+                <a href="/pdf-to-images"  onclick="navigateTo('/pdf-to-images');return false">PDF to Images</a>
+                <a href="/pdf-to-word"    onclick="navigateTo('/pdf-to-word');return false">PDF to Word</a>
+                <a href="/word-to-pdf"    onclick="navigateTo('/word-to-pdf');return false">Word to PDF</a>
+                <a href="/lock-pdf"       onclick="navigateTo('/lock-pdf');return false">Lock PDF</a>
+                <a href="/unlock-pdf"     onclick="navigateTo('/unlock-pdf');return false">Unlock PDF</a>
+            </div>
+            <div class="fc">
+                <h4>Why pdflu?</h4>
+                <span class="fi">Free PDF Editor Online</span>
+                <span class="fi">No File Uploads</span>
+                <span class="fi">iLovePDF Alternative</span>
+                <span class="fi">Sejda Alternative</span>
+                <span class="fi">Smallpdf Alternative</span>
+            </div>
+            <div class="fc">
+                <h4>pdflu</h4>
+                <p style="font-size:.8rem;color:var(--muted);line-height:1.65">Free online PDF toolkit. All tools run 100% in your browser — merge, split, rotate, watermark, convert images, PDF to Word, Word to PDF, and more. Zero sign-up. Zero cost.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 pdflu &mdash; Free Online PDF Tools &mdash; All processing is done locally in your browser.
+        </div>
+    </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+    /* ─────────────────────────────────────────
+       PDF.JS WORKER
+    ───────────────────────────────────────── */
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    /* ─────────────────────────────────────────
+       API BASE URL
+    ───────────────────────────────────────── */
+    const API_BASE_URL = 'https://aksul-pdf-api.onrender.com/api';
+    // For local dev swap to: const API_BASE_URL = 'http://localhost:8000/api';
+
+    /* ─────────────────────────────────────────
+       DARK MODE
+    ───────────────────────────────────────── */
+    const html = document.documentElement;
+
+    function applyTheme(t) {
+        html.classList.remove('light', 'dark');
+        html.classList.add(t);
+        document.getElementById('icon-moon').classList.toggle('hidden', t === 'dark');
+        document.getElementById('icon-sun').classList.toggle('hidden',  t === 'light');
+    }
+
+    function toggleDark() {
+        const next = html.classList.contains('dark') ? 'light' : 'dark';
+        applyTheme(next);
+        try { localStorage.setItem('pdflu-theme', next); } catch(e) {}
+    }
+
+    // Initialise theme from localStorage or system preference
+    ;(function() {
+        try {
+            const saved = localStorage.getItem('pdflu-theme');
+            if (saved) return applyTheme(saved);
+        } catch(e) {}
+        applyTheme(matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    })();
+
+    /* ─────────────────────────────────────────
+       TOAST NOTIFICATIONS
+    ───────────────────────────────────────── */
+    /**
+     * Show a toast notification.
+     * @param {string} msg  - Message text
+     * @param {'ok'|'err'|'warn'|'info'} type
+     * @param {number} [ms=5000] - Auto-dismiss delay
+     */
+    function toast(msg, type = 'info', ms = 5000) {
+        const icons = {
+            ok:   '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>',
+            err:  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>',
+            warn: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>',
+            info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+        };
+        const cls = { ok:'t-ok', err:'t-err', warn:'t-warn', info:'t-info' };
+        const el = document.createElement('div');
+        el.className = `toast toast-out ${cls[type]}`;
+        el.setAttribute('role', 'alert');
+        el.innerHTML = `
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">${icons[type]}</svg>
+            <span class="toast-msg">${esc(msg)}</span>
+            <button class="toast-x" onclick="dismissToast(this.closest('.toast'))" aria-label="Dismiss">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>`;
+        document.getElementById('toast-root').appendChild(el);
+        // Animate in
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('toast-out')));
+        // Auto dismiss
+        const timer = setTimeout(() => dismissToast(el), ms);
+        el.addEventListener('mouseenter', () => clearTimeout(timer));
+        el.addEventListener('mouseleave', () => setTimeout(() => dismissToast(el), 1800));
+    }
+
+    function dismissToast(el) {
+        if (!el?.isConnected) return;
+        el.classList.add('toast-out');
+        setTimeout(() => el?.remove(), 300);
+    }
+
+    /* ─────────────────────────────────────────
+       PASSWORD TOGGLE
+    ───────────────────────────────────────── */
+    function togglePw(id, btn) {
+        const inp = document.getElementById(id);
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        btn.setAttribute('aria-label', inp.type === 'password' ? 'Show password' : 'Hide password');
+    }
+
+    /* ─────────────────────────────────────────
+       APP STATE
+    ───────────────────────────────────────── */
+    const views = {
+        tools:     document.getElementById('view-tools'),
+        upload:    document.getElementById('view-upload'),
+        workspace: document.getElementById('view-workspace')
+    };
+
+    let currentTool   = { id: '', name: '' };
+    let fileStore     = {};         // fileId → File
+    let activeSingleFile = null;    // single-file tools
+    let sortableInst  = null;
+
+    /* ─────────────────────────────────────────
+       CLIENT-SIDE ROUTING
+    ───────────────────────────────────────── */
+    const routes = {
+        '/':             { view: 'tools',  title: 'pdflu – Free Online PDF Tools | Merge, Split, Convert & Edit PDFs' },
+        '/merge-pdf':    { id: 'merge',       name: 'Merge PDFs',       view: 'upload', title: 'Merge PDF — pdflu' },
+        '/split-pdf':    { id: 'split',       name: 'Extract Pages',    view: 'upload', title: 'Split PDF — pdflu' },
+        '/rotate-pdf':   { id: 'rotate',      name: 'Rotate Pages',     view: 'upload', title: 'Rotate PDF — pdflu' },
+        '/page-numbers': { id: 'pagenumbers', name: 'Add Page Numbers', view: 'upload', title: 'Page Numbers — pdflu' },
+        '/watermark-pdf':{ id: 'watermark',   name: 'Add Watermark',    view: 'upload', title: 'Watermark PDF — pdflu' },
+        '/image-to-pdf': { id: 'image',       name: 'Image to PDF',     view: 'upload', title: 'Image to PDF — pdflu' },
+        '/pdf-to-images':{ id: 'pdf2img',     name: 'PDF to Images',    view: 'upload', title: 'PDF to Images — pdflu' },
+        '/pdf-to-word':  { id: 'pdf2word',    name: 'PDF to Word',      view: 'upload', title: 'PDF to Word — pdflu' },
+        '/word-to-pdf':  { id: 'word2pdf',    name: 'Word to PDF',      view: 'upload', title: 'Word to PDF — pdflu' },
+        '/lock-pdf':     { id: 'lock',        name: 'Lock PDF',         view: 'upload', title: 'Lock PDF — pdflu' },
+        '/unlock-pdf':   { id: 'unlock',      name: 'Unlock PDF',       view: 'upload', title: 'Unlock PDF — pdflu' }
+    };
+
+    window.navigateTo = function(path) {
+        try { history.pushState({}, '', path); } catch(e) {}
+        handleRoute(path);
+    };
+
+    function handleRoute(path) {
+        if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+        const r = routes[path] || routes['/'];
+        document.title = r.title;
+        if (r.view === 'tools') showView('tools');
+        else selectTool(r.id, r.name);
+    }
+
+    window.addEventListener('popstate', () => handleRoute(location.pathname));
+    window.addEventListener('DOMContentLoaded', () => handleRoute(location.pathname));
+
+    /* ─────────────────────────────────────────
+       VIEW MANAGEMENT
+    ───────────────────────────────────────── */
+    function showView(name) {
+        Object.values(views).forEach(v => v.classList.add('hidden'));
+        views[name].classList.remove('hidden');
+        if (name === 'tools') clearWorkspace(false);
+        try { document.getElementById('main-content').focus({ preventScroll: true }); } catch(e) {}
+    }
+
+    /* Per-tool configuration table */
+    const TOOL_CFG = {
+        merge:       { accept:'.pdf',           upDesc:'Upload the PDF files you want to combine into one document.',          wsDesc:'Drag to reorder files, then click Merge Files.' },
+        split:       { accept:'.pdf',           upDesc:'Upload a PDF, then select which pages to extract.',                    wsDesc:'Click pages to select them, or use the range input below.' },
+        rotate:      { accept:'.pdf',           upDesc:'Upload a PDF to view and rotate its pages.',                           wsDesc:'Drag to reorder pages. Use the rotate button on any page.' },
+        pagenumbers: { accept:'.pdf',           upDesc:'Upload a single PDF to add page numbers.',                             wsDesc:'Set position and number options below, then apply.' },
+        watermark:   { accept:'.pdf',           upDesc:'Upload a single PDF to stamp watermark text on every page.',           wsDesc:'Enter your watermark text below, then stamp.' },
+        image:       { accept:'.jpg,.jpeg,.png',upDesc:'Upload images (JPG or PNG) to combine into a single PDF.',            wsDesc:'Drag to reorder images before converting.' },
+        pdf2img:     { accept:'.pdf',           upDesc:'Upload a PDF to export all its pages as PNG images.',                  wsDesc:'Preview your pages, then download the ZIP.' },
+        pdf2word:    { accept:'.pdf',           upDesc:'Upload a PDF to convert to an editable Word document (requires API).', wsDesc:'Click "Convert to Word" when ready.' },
+        word2pdf:    { accept:'.doc,.docx',     upDesc:'Upload a Word document (.doc or .docx) to convert to PDF (requires API).', wsDesc:'Click "Convert to PDF" when ready.' },
+        lock:        { accept:'.pdf',           upDesc:'Upload a PDF to protect it with a password (requires API).',           wsDesc:'Set a strong password below, then lock.' },
+        unlock:      { accept:'.pdf',           upDesc:'Upload an encrypted PDF to remove its password (requires API).',       wsDesc:'Enter the current password below to unlock.' }
+    };
+
+    window.selectTool = function(toolId, toolName) {
+        currentTool = { id: toolId, name: toolName };
+        const cfg = TOOL_CFG[toolId] || TOOL_CFG.merge;
+
+        document.getElementById('upload-tool-name').textContent = toolName;
+        document.getElementById('upload-tool-desc').textContent = cfg.upDesc;
+        document.getElementById('workspace-tool-name').textContent = toolName;
+        document.getElementById('workspace-tool-desc').textContent = cfg.wsDesc;
+        document.getElementById('file-input').accept = cfg.accept;
+
+        // Show/hide execute buttons (one at a time)
+        ['merge','rotate','split','pagenumbers','watermark','image','pdf2img','pdf2word','word2pdf','lock','unlock']
+            .forEach(id => document.getElementById(`btn-execute-${id}`).classList.toggle('hidden', toolId !== id));
+
+        // Show/hide settings panels
+        $('split-range-container').classList.toggle('hidden', toolId !== 'split');
+        $('pagenum-settings-container').classList.toggle('hidden', toolId !== 'pagenumbers');
+        $('watermark-settings-container').classList.toggle('hidden', toolId !== 'watermark');
+        $('password-settings-container').classList.toggle('hidden', !['lock','unlock'].includes(toolId));
+        $('confirm-password-wrapper').classList.toggle('hidden', toolId !== 'lock');
+        $('api-notice-container').classList.toggle('hidden', !['pdf2word','word2pdf','lock','unlock'].includes(toolId));
+
+        showView('upload');
+    };
+
+    window.clearWorkspace = function(redirect = true) {
+        fileStore = {}; activeSingleFile = null;
+        $('sortable-grid').innerHTML = '';
+        $('file-input').value = '';
+        $('split-range-input').value = '';
+        $('pdf-password').value = '';
+        $('pdf-password-confirm').value = '';
+        if (redirect) showView('upload');
+    };
+
+    /* ─────────────────────────────────────────
+       KEYBOARD NAVIGATION
+       Allows Enter/Space to activate role="button" cards
+    ───────────────────────────────────────── */
+    document.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute('role') === 'button') {
+            if (e.target.id === 'drop-zone') return; // handled separately
+            e.preventDefault();
+            e.target.click();
+        }
+    });
+
+    /* ─────────────────────────────────────────
+       DRAG & DROP / FILE INPUT
+    ───────────────────────────────────────── */
+    const dropZone = $('drop-zone');
+    const fileInput = $('file-input');
+    const grid = $('sortable-grid');
+
+    sortableInst = new Sortable(grid, { animation: 150, ghostClass: 'sortable-ghost' });
+
+    // Drop zone keyboard support
+    dropZone.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+    });
+
+    // Drag events
+    ['dragenter','dragover','dragleave','drop'].forEach(evt =>
+        dropZone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); })
+    );
+    dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+    dropZone.addEventListener('dragover',  () => dropZone.classList.add('drag-over'));
+    dropZone.addEventListener('dragleave', e => {
+        if (!dropZone.contains(e.relatedTarget)) dropZone.classList.remove('drag-over');
+    });
+    dropZone.addEventListener('drop', e => {
+        dropZone.classList.remove('drag-over');
+        processFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', function() { processFiles(this.files); });
+
+    /* ─────────────────────────────────────────
+       FILE PROCESSING ROUTER
+    ───────────────────────────────────────── */
+    async function processFiles(files) {
+        let valid;
+        const id = currentTool.id;
+
+        if (id === 'image') {
+            valid = Array.from(files).filter(f => f.type.startsWith('image/'));
+            if (!valid.length) return toast('Please upload valid image files (JPG or PNG).', 'err');
+        } else if (id === 'word2pdf') {
+            valid = Array.from(files).filter(f => /\.(doc|docx)$/i.test(f.name));
+            if (!valid.length) return toast('Please upload a valid Word document (.doc or .docx).', 'err');
+        } else {
+            valid = Array.from(files).filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
+            if (!valid.length) return toast('Please upload valid PDF files.', 'err');
+        }
+
+        showView('workspace');
+        scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (id === 'rotate') {
+            sortableInst.option('disabled', false);
+            await handleRotate(valid);
+        } else if (id === 'split') {
+            sortableInst.option('disabled', true);
+            await handleSplit(valid);
+        } else if (['pagenumbers','watermark','pdf2img','pdf2word','lock'].includes(id)) {
+            sortableInst.option('disabled', true);
+            await handleSinglePdf(valid);
+        } else if (['word2pdf','unlock'].includes(id)) {
+            sortableInst.option('disabled', true);
+            handleDocPreview(valid);
+        } else if (id === 'image') {
+            sortableInst.option('disabled', false);
+            await handleImages(valid);
+        } else {
+            // merge (default)
+            sortableInst.option('disabled', false);
+            await handleMerge(valid);
+        }
+
+        fileInput.value = '';
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE RANGE HELPER  (split tool)
+    ───────────────────────────────────────── */
+    window.applyPageRange = function() {
+        const raw = $('split-range-input').value.trim();
+        const cards = grid.querySelectorAll('[data-page-index]');
+        const total = cards.length;
+        if (!raw) return toast('Enter a page range first, e.g. "1-5, 8, 11-13".', 'warn');
+
+        const pages = new Set();
+        raw.split(',').forEach(p => {
+            p = p.trim();
+            if (p.includes('-')) {
+                let [a, b] = p.split('-').map(Number);
+                if (!isNaN(a) && !isNaN(b)) {
+                    if (a > b) [a, b] = [b, a];
+                    for (let i = a; i <= b; i++) if (i >= 1 && i <= total) pages.add(i);
+                }
+            } else {
+                const n = parseInt(p);
+                if (!isNaN(n) && n >= 1 && n <= total) pages.add(n);
+            }
+        });
+
+        cards.forEach(c => {
+            const pn = parseInt(c.getAttribute('data-page-index')) + 1;
+            const sel = pages.has(pn);
+            c.classList.toggle('selected', sel);
+            const chk = c.querySelector('.sel-check');
+            if (chk) chk.classList.toggle('hidden', !sel);
+        });
+
+        toast(`${pages.size} page${pages.size !== 1 ? 's' : ''} selected.`, 'info', 3000);
+    };
+
+    /* ─────────────────────────────────────────
+       UPLOAD HANDLERS
+    ───────────────────────────────────────── */
+
+    /** Image files → Image-to-PDF tool */
+    async function handleImages(files) {
+        showBtns(false, false, false); // no add-more, no rotate-all, no select-all
+        document.getElementById('btn-add-more').classList.remove('hidden');
+
+        for (const f of files) {
+            const id = uid();
+            fileStore[id] = f;
+            const card = mkCard(id, 'pc cursor-move');
+            grid.appendChild(card);
+            try {
+                const url = URL.createObjectURL(f);
+                card.innerHTML = `
+                    <img src="${url}" alt="${esc(f.name)}"/>
+                    <div class="pc-lbl">${esc(trunc(f.name, 26))}</div>
+                    <button class="pc-btn rm" onclick="removeFile('${id}')" aria-label="Remove ${esc(f.name)}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>`;
+            } catch(e) {
+                card.innerHTML = `<span style="font-size:.7rem;color:var(--muted);text-align:center;padding:8px">${esc(trunc(f.name,20))}<br>Preview failed</span>`;
+            }
+        }
+    }
+
+    /** Single PDF (watermark, page numbers, pdf2img, pdf2word, lock) */
+    async function handleSinglePdf(files) {
+        if (activeSingleFile) return toast('A file is already loaded. Use "Start Over" to upload a new one.', 'warn');
+        if (files.length > 1) toast('Only one PDF at a time — loading the first file.', 'info', 3000);
+        activeSingleFile = files[0];
+        showBtns(false, false, false);
+
+        try {
+            const ab  = await activeSingleFile.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+            const si  = $('pagenum-start');
+            if (si) si.max = pdf.numPages;
+
+            for (let n = 1; n <= pdf.numPages; n++) {
+                const card = mkPageCard(n - 1);
+                grid.appendChild(card);
+                renderPage(pdf, n, card);
+            }
+        } catch(e) {
+            // Encrypted / corrupt — show document preview instead
+            const f = activeSingleFile;
+            activeSingleFile = null;
+            handleDocPreview([f]);
+            activeSingleFile = f; // restore after preview sets it
+        }
+    }
+
+    /** Document preview (encrypted PDF, Word files) */
+    function handleDocPreview(files) {
+        if (activeSingleFile) return toast('A file is already loaded. Use "Start Over" to upload a new one.', 'warn');
+        if (files.length > 1) toast('Only one file at a time — loading the first file.', 'info', 3000);
+        activeSingleFile = files[0];
+        showBtns(false, false, false);
+
+        const card = document.createElement('div');
+        card.className = 'pc doc-full';
+        card.setAttribute('data-id', 'doc_preview');
+        card.innerHTML = `
+            <svg class="w-16 h-16" style="color:var(--brand)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p style="font-weight:700;color:var(--text);word-break:break-all;max-width:420px;text-align:center">${esc(activeSingleFile.name)}</p>
+            <p style="font-size:.8rem;color:var(--muted)">${fmtSize(activeSingleFile.size)} — Ready for processing</p>`;
+        grid.appendChild(card);
+    }
+
+    /** Split tool — selectable pages */
+    async function handleSplit(files) {
+        if (activeSingleFile) return toast('A file is already loaded. Use "Start Over" to upload a new one.', 'warn');
+        if (files.length > 1) toast('Only one PDF at a time — loading the first file.', 'info', 3000);
+        activeSingleFile = files[0];
+        showBtns(false, false, true);
+
+        try {
+            const pdf = await pdfjsLib.getDocument({ data: await activeSingleFile.arrayBuffer() }).promise;
+            for (let n = 1; n <= pdf.numPages; n++) {
+                const pi = n - 1;
+                const card = document.createElement('div');
+                card.className = 'pc cursor-pointer';
+                card.setAttribute('data-id', `page_${pi}`);
+                card.setAttribute('data-page-index', pi);
+                card.onclick = function() {
+                    const sel = this.classList.toggle('selected');
+                    const chk = this.querySelector('.sel-check');
+                    if (chk) chk.classList.toggle('hidden', !sel);
+                };
+                card.innerHTML = '<div class="spinner"></div>';
+                grid.appendChild(card);
+                renderPage(pdf, n, card, true);
+            }
+        } catch(e) {
+            toast('Failed to load PDF. The file may be corrupt or encrypted.', 'err');
+            clearWorkspace();
+        }
+    }
+
+    /** Rotate tool */
+    async function handleRotate(files) {
+        if (activeSingleFile) return toast('A file is already loaded. Use "Start Over" to upload a new one.', 'warn');
+        if (files.length > 1) toast('Only one PDF at a time — loading the first file.', 'info', 3000);
+        activeSingleFile = files[0];
+        showBtns(false, true, false);
+
+        try {
+            const pdf = await pdfjsLib.getDocument({ data: await activeSingleFile.arrayBuffer() }).promise;
+            for (let n = 1; n <= pdf.numPages; n++) {
+                const pi = n - 1, cid = `page_${pi}`;
+                const card = document.createElement('div');
+                card.className = 'pc cursor-move';
+                card.setAttribute('data-id', cid);
+                card.setAttribute('data-page-index', pi);
+                card.setAttribute('data-rotation', '0');
+                card.innerHTML = '<div class="spinner"></div>';
+                grid.appendChild(card);
+
+                const page = await pdf.getPage(n);
+                const vp = page.getViewport({ scale: 1 });
+                const cvs = mkCanvas(vp);
+                await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
+
+                card.innerHTML = `
+                    <img src="${cvs.toDataURL()}" alt="Page ${n}"/>
+                    <div class="pc-lbl">Page ${n}</div>
+                    <button class="pc-btn rm"  onclick="removeFile('${cid}')" aria-label="Remove page ${n}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                    <button class="pc-btn rot" onclick="rotateVisual('${cid}')" aria-label="Rotate page ${n} 90°">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    </button>`;
+            }
+        } catch(e) {
+            toast('Failed to load PDF. The file may be corrupt or encrypted.', 'err');
+            clearWorkspace();
+        }
+    }
+
+    /** Merge tool — multiple PDFs */
+    async function handleMerge(files) {
+        showBtns(true, false, false);
+
+        for (const f of files) {
+            const id = uid();
+            fileStore[id] = f;
+            const card = mkCard(id, 'pc cursor-move');
+            grid.appendChild(card);
+            try {
+                const pdf  = await pdfjsLib.getDocument({ data: await f.arrayBuffer() }).promise;
+                const page = await pdf.getPage(1);
+                const vp   = page.getViewport({ scale: 1 });
+                const cvs  = mkCanvas(vp);
+                await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
+                card.innerHTML = `
+                    <img src="${cvs.toDataURL()}" alt="${esc(f.name)}"/>
+                    <div class="pc-lbl">${esc(trunc(f.name, 26))}</div>
+                    <button class="pc-btn rm" onclick="removeFile('${id}')" aria-label="Remove ${esc(f.name)}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>`;
+            } catch(e) {
+                card.innerHTML = `<span style="font-size:.7rem;color:var(--muted);text-align:center;padding:8px">${esc(trunc(f.name,20))}<br>Preview failed</span>`;
+            }
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       SELECT ALL (split tool)
+    ───────────────────────────────────────── */
+    window.selectAllPages = function() {
+        const cards = grid.querySelectorAll('[data-page-index]');
+        const allSel = Array.from(cards).every(c => c.classList.contains('selected'));
+        cards.forEach(c => {
+            c.classList.toggle('selected', !allSel);
+            const chk = c.querySelector('.sel-check');
+            if (chk) chk.classList.toggle('hidden', allSel);
+        });
+    };
+
+    /* ─────────────────────────────────────────
+       ROTATE VISUAL
+    ───────────────────────────────────────── */
+    window.rotateVisual = function(cid) {
+        const card = document.querySelector(`[data-id="${cid}"]`);
+        if (!card) return;
+        const img = card.querySelector('img');
+        if (!img) return;
+        const rot = (parseInt(card.getAttribute('data-rotation') || '0') + 90) % 360;
+        card.setAttribute('data-rotation', rot);
+        img.style.transform = `rotate(${rot}deg) scale(${rot === 90 || rot === 270 ? 0.72 : 1})`;
+        img.style.transition = 'transform .25s ease';
+    };
+
+    window.rotateAllVisual = function() {
+        grid.querySelectorAll('[data-id]').forEach(c => rotateVisual(c.getAttribute('data-id')));
+    };
+
+    /* ─────────────────────────────────────────
+       REMOVE FILE / PAGE
+    ───────────────────────────────────────── */
+    window.removeFile = function(id) {
+        delete fileStore[id];
+        const el = document.querySelector(`[data-id="${id}"]`);
+        if (el) el.remove();
+        if (!grid.children.length) clearWorkspace();
+    };
+
+    /* ─────────────────────────────────────────
+       HELPERS
+    ───────────────────────────────────────── */
+    function $(id) { return document.getElementById(id); }
+    function uid() { return 'f_' + Math.random().toString(36).slice(2, 11); }
+    function esc(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+    function trunc(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+    function fmtSize(b) {
+        if (b < 1024) return b + ' B';
+        if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+        return (b/1048576).toFixed(1) + ' MB';
+    }
+    function mkCanvas(vp) {
+        const c = document.createElement('canvas');
+        c.width = vp.width; c.height = vp.height; return c;
+    }
+    function mkCard(id, cls) {
+        const d = document.createElement('div');
+        d.className = cls; d.setAttribute('data-id', id);
+        d.innerHTML = '<div class="spinner"></div>'; return d;
+    }
+    function mkPageCard(pi) {
+        const d = document.createElement('div');
+        d.className = 'pc'; d.setAttribute('data-id', `page_${pi}`);
+        d.setAttribute('data-page-index', pi);
+        d.innerHTML = '<div class="spinner"></div>'; return d;
+    }
+    function showBtns(addMore, rotAll, selAll) {
+        $('btn-add-more').classList.toggle('hidden',   !addMore);
+        $('btn-rotate-all').classList.toggle('hidden', !rotAll);
+        $('btn-select-all').classList.toggle('hidden', !selAll);
+    }
+    /** Render a PDF page into a card element (async, doesn't block) */
+    async function renderPage(pdf, n, card, isSplit = false) {
+        try {
+            const page = await pdf.getPage(n);
+            const vp   = page.getViewport({ scale: 1 });
+            const cvs  = mkCanvas(vp);
+            await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
+            const img = `<img src="${cvs.toDataURL()}" alt="Page ${n}"/>`;
+            const lbl = `<div class="pc-lbl">Page ${n}</div>`;
+            if (isSplit) {
+                card.innerHTML = `${img}
+                    <div class="sel-check hidden">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>${lbl}`;
+            } else {
+                card.innerHTML = img + lbl;
+            }
+        } catch(e) {
+            card.innerHTML = `<span style="font-size:.7rem;color:var(--muted);text-align:center;padding:8px">Page ${n}<br>Preview failed</span>`;
+        }
+    }
+    /** Download a Blob as a file */
+    function dlBlob(blob, name) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = name;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    /** Put button into loading state; returns restore function */
+    function setLoading(btnId, textId, msg) {
+        const btn = $(btnId), txt = $(textId);
+        btn.disabled = true;
+        const orig = txt.textContent;
+        txt.textContent = msg;
+        return () => { btn.disabled = false; txt.textContent = orig; };
+    }
+
+    /* ─────────────────────────────────────────
+       EXECUTE OPERATIONS
+    ───────────────────────────────────────── */
+
+    /* PDF → Images (ZIP) */
+    $('btn-execute-pdf2img').addEventListener('click', async () => {
+        if (!activeSingleFile) return;
+        const restore = setLoading('btn-execute-pdf2img', 'pdf2img-btn-text', 'Exporting…');
+        try {
+            const pdf = await pdfjsLib.getDocument({ data: await activeSingleFile.arrayBuffer() }).promise;
+            const zip = new JSZip();
+            for (let n = 1; n <= pdf.numPages; n++) {
+                const page = await pdf.getPage(n);
+                const vp   = page.getViewport({ scale: 2 }); // 2× for quality
+                const cvs  = mkCanvas(vp);
+                await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
+                zip.file(`page_${n}.png`, await new Promise(r => cvs.toBlob(r, 'image/png')));
+            }
+            dlBlob(await zip.generateAsync({ type: 'blob' }), activeSingleFile.name.replace(/\.pdf$/i,'') + '_images.zip');
+            toast('Images exported — ZIP downloaded!', 'ok');
+        } catch(e) { toast('Failed to export images. Please try again.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* Watermark */
+    $('btn-execute-watermark').addEventListener('click', async () => {
+        if (!activeSingleFile) return;
+        const txt = $('watermark-text').value.trim();
+        if (!txt) return toast('Please enter watermark text.', 'warn');
+        const restore = setLoading('btn-execute-watermark', 'watermark-btn-text', 'Applying…');
+        try {
+            const doc  = await PDFLib.PDFDocument.load(await activeSingleFile.arrayBuffer());
+            const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+            for (const page of doc.getPages()) {
+                const { width, height } = page.getSize();
+                const sz = 60;
+                page.drawText(txt, {
+                    x: (width / 2) - (font.widthOfTextAtSize(txt, sz) / 2),
+                    y: (height / 2) - (sz / 2),
+                    size: sz, font,
+                    color: PDFLib.rgb(0.5, 0.5, 0.5), opacity: 0.3,
+                    rotate: PDFLib.degrees(45)
+                });
+            }
+            dlBlob(new Blob([await doc.save()], { type:'application/pdf' }), activeSingleFile.name.replace(/\.pdf$/i,'') + '_watermarked.pdf');
+            toast('Watermark applied — PDF downloaded!', 'ok');
+        } catch(e) { toast('Failed to add watermark. The PDF may be encrypted.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* Image → PDF */
+    $('btn-execute-image').addEventListener('click', async () => {
+        const items = grid.querySelectorAll('[data-id]');
+        if (!items.length) return toast('Please add at least one image first.', 'warn');
+        const restore = setLoading('btn-execute-image', 'image-btn-text', 'Converting…');
+        try {
+            const doc = await PDFLib.PDFDocument.create();
+            for (const card of items) {
+                const f = fileStore[card.getAttribute('data-id')];
+                if (!f) continue;
+                const buf = await f.arrayBuffer();
+                const img = f.type === 'image/png' ? await doc.embedPng(buf) : await doc.embedJpg(buf);
+                doc.addPage([img.width, img.height]).drawImage(img, { x:0, y:0, width:img.width, height:img.height });
+            }
+            dlBlob(new Blob([await doc.save()], { type:'application/pdf' }), 'pdflu_converted_images.pdf');
+            toast('PDF created and downloaded!', 'ok');
+        } catch(e) { toast('Failed to convert images. Check the files and try again.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* Page Numbers */
+    $('btn-execute-pagenumbers').addEventListener('click', async () => {
+        if (!activeSingleFile) return;
+        const restore = setLoading('btn-execute-pagenumbers', 'pagenum-btn-text', 'Applying…');
+        try {
+            const doc      = await PDFLib.PDFDocument.load(await activeSingleFile.arrayBuffer());
+            const font     = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+            const position = $('pagenum-position').value;
+            const startPg  = parseInt($('pagenum-start').value) - 1;
+            let   num      = parseInt($('pagenum-start-value').value);
+            const margin   = 30, sz = 12;
+
+            doc.getPages().forEach((page, i) => {
+                if (i < startPg) return;
+                const { width, height } = page.getSize();
+                const t  = String(num++);
+                const tw = font.widthOfTextAtSize(t, sz);
+                const y  = position.includes('bottom') ? margin : height - margin - sz;
+                const x  = position.includes('center') ? (width/2)-(tw/2) : position.includes('right') ? width-margin-tw : margin;
+                page.drawText(t, { x, y, size: sz, font, color: PDFLib.rgb(0,0,0) });
+            });
+            dlBlob(new Blob([await doc.save()], { type:'application/pdf' }), activeSingleFile.name.replace(/\.pdf$/i,'') + '_numbered.pdf');
+            toast('Page numbers added — PDF downloaded!', 'ok');
+        } catch(e) { toast('Failed to add page numbers. The PDF may be encrypted.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* Split / Extract */
+    $('btn-execute-split').addEventListener('click', async () => {
+        const sel = grid.querySelectorAll('.selected');
+        if (!sel.length) return toast('Select at least one page to extract.', 'warn');
+        const restore = setLoading('btn-execute-split', 'split-btn-text', 'Extracting…');
+        try {
+            const src  = await PDFLib.PDFDocument.load(await activeSingleFile.arrayBuffer());
+            const out  = await PDFLib.PDFDocument.create();
+            const idxs = Array.from(sel).map(c => parseInt(c.getAttribute('data-page-index')));
+            const pgs  = await out.copyPages(src, idxs);
+            pgs.forEach(p => out.addPage(p));
+            dlBlob(new Blob([await out.save()], { type:'application/pdf' }), activeSingleFile.name.replace(/\.pdf$/i,'') + '_extracted.pdf');
+            toast(`${idxs.length} page${idxs.length !== 1 ? 's' : ''} extracted — PDF downloaded!`, 'ok');
+        } catch(e) { toast('Failed to extract pages. The PDF may be encrypted.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* Rotate & Save */
+    $('btn-execute-rotate').addEventListener('click', async () => {
+        const items = grid.querySelectorAll('[data-page-index]');
+        if (!items.length) return toast('No pages to save.', 'warn');
+        const restore = setLoading('btn-execute-rotate', 'rotate-btn-text', 'Saving…');
+        try {
+            const src  = await PDFLib.PDFDocument.load(await activeSingleFile.arrayBuffer());
+            const out  = await PDFLib.PDFDocument.create();
+            for (const card of items) {
+                const idx = parseInt(card.getAttribute('data-page-index'));
+                const rot = parseInt(card.getAttribute('data-rotation') || '0');
+                const [pg] = await out.copyPages(src, [idx]);
+                if (rot !== 0) pg.setRotation(PDFLib.degrees(pg.getRotation().angle + rot));
+                out.addPage(pg);
+            }
+            dlBlob(new Blob([await out.save()], { type:'application/pdf' }), activeSingleFile.name.replace(/\.pdf$/i,'') + '_rotated.pdf');
+            toast('PDF saved with rotation changes!', 'ok');
+        } catch(e) { toast('Failed to save PDF. Please try again.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* Merge */
+    $('btn-execute-merge').addEventListener('click', async () => {
+        const items = grid.querySelectorAll('[data-id]');
+        if (items.length < 2) return toast('Add at least 2 PDFs to merge.', 'warn');
+        const restore = setLoading('btn-execute-merge', 'merge-btn-text', 'Merging…');
+        try {
+            const out = await PDFLib.PDFDocument.create();
+            for (const card of items) {
+                const f = fileStore[card.getAttribute('data-id')];
+                if (!f) continue;
+                const pdf  = await PDFLib.PDFDocument.load(await f.arrayBuffer());
+                const pgs  = await out.copyPages(pdf, pdf.getPageIndices());
+                pgs.forEach(p => out.addPage(p));
+            }
+            dlBlob(new Blob([await out.save()], { type:'application/pdf' }), 'pdflu_merged.pdf');
+            toast('PDFs merged and downloaded!', 'ok');
+        } catch(e) { toast('Failed to merge. One or more files may be encrypted or corrupt.', 'err'); console.error(e); }
+        finally { restore(); }
+    });
+
+    /* PDF → Word (backend API) */
+    $('btn-execute-pdf2word').addEventListener('click', async () => {
+        if (!activeSingleFile) return toast('Please upload a PDF file first.', 'warn');
+        const restore = setLoading('btn-execute-pdf2word', 'pdf2word-btn-text', 'Converting…');
+        const fd = new FormData();
+        fd.append('file', activeSingleFile);
+        try {
+            const res = await fetch(`${API_BASE_URL}/pdf-to-word`, { method:'POST', body:fd });
+            if (!res.ok) throw new Error(`Server error ${res.status}`);
+            dlBlob(await res.blob(), activeSingleFile.name.replace(/\.pdf$/i, '.docx'));
+            toast('PDF converted to Word — downloaded!', 'ok');
+        } catch(e) {
+            toast('Conversion failed. Make sure your Python FastAPI server is running on localhost:8000.', 'err');
+            console.error(e);
+        } finally { restore(); }
+    });
+
+    /* Word → PDF (backend API) */
+    $('btn-execute-word2pdf').addEventListener('click', async () => {
+        if (!activeSingleFile) return toast('Please upload a Word document first.', 'warn');
+        const restore = setLoading('btn-execute-word2pdf', 'word2pdf-btn-text', 'Converting…');
+        const fd = new FormData();
+        fd.append('file', activeSingleFile);
+        try {
+            const res = await fetch(`${API_BASE_URL}/word-to-pdf`, { method:'POST', body:fd });
+            if (!res.ok) throw new Error(`Server error ${res.status}`);
+            dlBlob(await res.blob(), activeSingleFile.name.replace(/\.docx?$/i, '.pdf'));
+            toast('Word converted to PDF — downloaded!', 'ok');
+        } catch(e) {
+            toast('Conversion failed. Make sure the Python server is running and LibreOffice is installed.', 'err');
+            console.error(e);
+        } finally { restore(); }
+    });
+
+    /* Lock PDF (backend API) */
+    $('btn-execute-lock').addEventListener('click', async () => {
+        if (!activeSingleFile) return toast('Please upload a PDF file first.', 'warn');
+        const pw  = $('pdf-password').value;
+        const pw2 = $('pdf-password-confirm').value;
+        if (!pw)           return toast('Please enter a password.', 'warn');
+        if (pw.length < 4) return toast('Password must be at least 4 characters.', 'warn');
+        if (pw !== pw2)    return toast('Passwords do not match. Please check and try again.', 'err');
+        const restore = setLoading('btn-execute-lock', 'lock-btn-text', 'Locking…');
+        const fd = new FormData();
+        fd.append('file', activeSingleFile);
+        fd.append('password', pw);
+        try {
+            const res = await fetch(`${API_BASE_URL}/lock-pdf`, { method:'POST', body:fd });
+            if (!res.ok) throw new Error(`Server error ${res.status}`);
+            dlBlob(await res.blob(), activeSingleFile.name.replace(/\.pdf$/i,'') + '_locked.pdf');
+            toast('PDF locked with password — downloaded!', 'ok');
+        } catch(e) {
+            toast('Failed to lock PDF. Make sure the Python FastAPI server is running.', 'err');
+            console.error(e);
+        } finally { restore(); }
+    });
+
+    /* Unlock PDF (backend API) */
+    $('btn-execute-unlock').addEventListener('click', async () => {
+        if (!activeSingleFile) return toast('Please upload a PDF file first.', 'warn');
+        const pw = $('pdf-password').value;
+        if (!pw) return toast('Please enter the password to unlock.', 'warn');
+        const restore = setLoading('btn-execute-unlock', 'unlock-btn-text', 'Unlocking…');
+        const fd = new FormData();
+        fd.append('file', activeSingleFile);
+        fd.append('password', pw);
+        try {
+            const res = await fetch(`${API_BASE_URL}/unlock-pdf`, { method:'POST', body:fd });
+            if (!res.ok) {
+                if (res.status === 401 || res.status === 403) throw new Error('wrong_password');
+                throw new Error(`Server error ${res.status}`);
+            }
+            dlBlob(await res.blob(), activeSingleFile.name.replace(/\.pdf$/i,'') + '_unlocked.pdf');
+            toast('PDF unlocked — downloaded!', 'ok');
+        } catch(e) {
+            toast(e.message === 'wrong_password'
+                ? 'Incorrect password. Please check and try again.'
+                : 'Failed to unlock PDF. Make sure the Python FastAPI server is running.',
+            'err');
+            console.error(e);
+        } finally { restore(); }
+    });
+
+</script>
+</body>
+</html>
