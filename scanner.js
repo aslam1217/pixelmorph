@@ -162,3 +162,102 @@ function detectDocument(src) {
     return orderCorners(biggest);
 
 }
+// ======================================
+// scanner.js
+// Part 2
+// ======================================
+
+// Warp document using the detected corners
+function warpDocument(src, corners) {
+
+    const [tl, tr, br, bl] = corners;
+
+    const widthTop = distance(tl, tr);
+    const widthBottom = distance(bl, br);
+
+    const maxWidth = Math.max(widthTop, widthBottom);
+
+    const heightLeft = distance(tl, bl);
+    const heightRight = distance(tr, br);
+
+    const maxHeight = Math.max(heightLeft, heightRight);
+
+    const srcTri = cv.matFromArray(
+        4,
+        1,
+        cv.CV_32FC2,
+        [
+            tl.x, tl.y,
+            tr.x, tr.y,
+            br.x, br.y,
+            bl.x, bl.y
+        ]
+    );
+
+    const dstTri = cv.matFromArray(
+        4,
+        1,
+        cv.CV_32FC2,
+        [
+            0, 0,
+            maxWidth - 1, 0,
+            maxWidth - 1, maxHeight - 1,
+            0, maxHeight - 1
+        ]
+    );
+
+    const M = cv.getPerspectiveTransform(srcTri, dstTri);
+
+    const dst = new cv.Mat();
+
+    cv.warpPerspective(
+        src,
+        dst,
+        M,
+        new cv.Size(
+            Math.round(maxWidth),
+            Math.round(maxHeight)
+        ),
+        cv.INTER_LINEAR,
+        cv.BORDER_REPLICATE,
+        new cv.Scalar()
+    );
+
+    srcTri.delete();
+    dstTri.delete();
+    M.delete();
+
+    return dst;
+
+}
+
+// Improve scanned appearance
+function enhanceDocument(mat) {
+
+    let gray = new cv.Mat();
+
+    cv.cvtColor(
+        mat,
+        gray,
+        cv.COLOR_RGBA2GRAY
+    );
+
+    cv.adaptiveThreshold(
+        gray,
+        gray,
+        255,
+        cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv.THRESH_BINARY,
+        21,
+        15
+    );
+
+    cv.cvtColor(
+        gray,
+        mat,
+        cv.COLOR_GRAY2RGBA
+    );
+
+    gray.delete();
+
+}
