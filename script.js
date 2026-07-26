@@ -288,9 +288,9 @@ function sortCorners(pts){
 
     let br=pts[sum.indexOf(Math.max(...sum))];
 
-    let tr=pts[diff.indexOf(Math.min(...diff))];
+    let tr = pts[diff.indexOf(Math.max(...diff))];
 
-    let bl=pts[diff.indexOf(Math.max(...diff))];
+    let bl = pts[diff.indexOf(Math.min(...diff))];
 
     return [
 
