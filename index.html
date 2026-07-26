@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Auto Crop</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- OpenCV.js -->
+<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+
+</head>
+<body>
+
+<h1>Document Auto Crop</h1>
+
+<input type="file" id="upload" accept="image/*">
+
+<div class="container">
+
+<div>
+<h3>Original</h3>
+<canvas id="canvasInput"></canvas>
+</div>
+
+<div>
+<h3>Cropped</h3>
+<canvas id="canvasOutput"></canvas>
+</div>
+
+</div>
+
+<button id="process">Detect & Crop</button>
+
+<script src="script.js"></script>
+
+</body>
+</html>
