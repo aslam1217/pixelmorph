@@ -261,3 +261,170 @@ function enhanceDocument(mat) {
     gray.delete();
 
 }
+// ======================================
+// scanner.js
+// Part 3
+// Replace detectDocument()
+// ======================================
+
+function detectDocument(src) {
+
+    let gray = new cv.Mat();
+    let blur = new cv.Mat();
+    let thresh = new cv.Mat();
+    let kernel = cv.Mat.ones(5, 5, cv.CV_8U);
+
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+    cv.GaussianBlur(
+        gray,
+        blur,
+        new cv.Size(5, 5),
+        0
+    );
+
+    cv.adaptiveThreshold(
+        blur,
+        thresh,
+        255,
+        cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv.THRESH_BINARY,
+        31,
+        10
+    );
+
+    cv.bitwise_not(thresh, thresh);
+
+    cv.morphologyEx(
+        thresh,
+        thresh,
+        cv.MORPH_CLOSE,
+        kernel
+    );
+
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
+
+    cv.findContours(
+        thresh,
+        contours,
+        hierarchy,
+        cv.RETR_EXTERNAL,
+        cv.CHAIN_APPROX_SIMPLE
+    );
+
+    let bestScore = -1;
+    let bestCorners = null;
+
+    const imageArea = src.rows * src.cols;
+
+    for (let i = 0; i < contours.size(); i++) {
+
+        const contour = contours.get(i);
+
+        const area = cv.contourArea(contour);
+
+        if (area < imageArea * 0.10) {
+
+            contour.delete();
+
+            continue;
+
+        }
+
+        const perimeter = cv.arcLength(
+            contour,
+            true
+        );
+
+        const approx = new cv.Mat();
+
+        cv.approxPolyDP(
+            contour,
+            approx,
+            0.02 * perimeter,
+            true
+        );
+
+        if (approx.rows !== 4) {
+
+            approx.delete();
+            contour.delete();
+
+            continue;
+
+        }
+
+        const rect = cv.boundingRect(contour);
+
+        const aspect =
+            rect.width / rect.height;
+
+        if (aspect < 0.45 || aspect > 2.4) {
+
+            approx.delete();
+            contour.delete();
+
+            continue;
+
+        }
+
+        let score = 0;
+
+        score += area / imageArea;
+
+        const cx = rect.x + rect.width / 2;
+        const cy = rect.y + rect.height / 2;
+
+        const dx = cx - src.cols / 2;
+        const dy = cy - src.rows / 2;
+
+        const centerDistance =
+            Math.sqrt(dx * dx + dy * dy);
+
+        score +=
+            1 -
+            centerDistance /
+                Math.sqrt(
+                    src.cols * src.cols +
+                    src.rows * src.rows
+                );
+
+        if (score > bestScore) {
+
+            bestScore = score;
+
+            bestCorners = [];
+
+            for (let j = 0; j < 4; j++) {
+
+                bestCorners.push({
+
+                    x: approx.intPtr(j, 0)[0],
+
+                    y: approx.intPtr(j, 0)[1]
+
+                });
+
+            }
+
+        }
+
+        approx.delete();
+        contour.delete();
+
+    }
+
+    gray.delete();
+    blur.delete();
+    thresh.delete();
+    kernel.delete();
+    contours.delete();
+    hierarchy.delete();
+
+    if (!bestCorners)
+        return null;
+
+    return orderCorners(bestCorners);
+
+}
