@@ -1,45 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document Auto Crop</title>
 
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
 
-<!-- OpenCV.js -->
-<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Document Scanner</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- OpenCV -->
+    <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
 
 </head>
+
 <body>
-
-<h1>Document Auto Crop</h1>
-
-<input
-    type="file"
-    id="upload"
-    accept="image/*"
-    capture="environment"
-    multiple
->
 
 <div class="container">
 
-<div>
-<h3>Original</h3>
-<canvas id="canvasInput"></canvas>
-</div>
+    <h1>📄 Document Scanner</h1>
 
-<div>
-<h3>Cropped</h3>
-<canvas id="canvasOutput"></canvas>
-</div>
+    <p class="subtitle">
+        Upload one or more images and automatically crop documents.
+    </p>
+
+    <div class="upload-box">
+
+        <input
+            type="file"
+            id="upload"
+            accept="image/*"
+            multiple>
+
+    </div>
+
+    <div class="buttons">
+
+        <button id="clearBtn">
+            🗑 Clear All
+        </button>
+
+        <button id="downloadBtn">
+            ⬇ Download Images
+        </button>
+
+    </div>
+
+    <h2>Scanned Pages</h2>
+
+    <div id="results"></div>
 
 </div>
-
-<button id="process">Detect & Crop</button>
 
 <script src="script.js"></script>
 
 </body>
+
 </html>
