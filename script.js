@@ -1,53 +1,79 @@
-let canvas=document.getElementById("canvasInput");
-let ctx=canvas.getContext("2d");
+// ===============================
+// Document Scanner - script.js
+// ===============================
 
-let image=new Image();
+const upload = document.getElementById("upload");
+const results = document.getElementById("results");
+const clearBtn = document.getElementById("clearBtn");
+const downloadBtn = document.getElementById("downloadBtn");
 
-document.getElementById("upload").addEventListener("change",e=>{
+let scannedPages = [];
 
-    const files = e.target.files;
+// ----------------------
+// Upload Images
+// ----------------------
+upload.addEventListener("change", (e) => {
 
-    for (const file of files) {
+    const files = [...e.target.files];
+
+    if (!files.length) return;
+
+    files.forEach(file => {
+
+        if (!file.type.startsWith("image/")) return;
+
         const img = new Image();
-    
+
         img.onload = () => {
-            // Process this image
-            processImage(img);
+
+            scanDocument(img);
+
+            URL.revokeObjectURL(img.src);
+
         };
-    
+
         img.src = URL.createObjectURL(file);
-    }
 
-    image.src=URL.createObjectURL(file);
-
-    image.onload=()=>{
-
-        canvas.width=image.width;
-        canvas.height=image.height;
-
-        ctx.drawImage(image,0,0);
-
-    }
+    });
 
 });
 
-document.getElementById("process").onclick=function(){
+// ----------------------
+// Scan One Image
+// ----------------------
+function scanDocument(image){
 
-    let src=cv.imread("canvasInput");
+    const tempCanvas = document.createElement("canvas");
+    const tempCtx = tempCanvas.getContext("2d");
 
-    let gray=new cv.Mat();
+    tempCanvas.width = image.width;
+    tempCanvas.height = image.height;
 
+    tempCtx.drawImage(image,0,0);
+
+    let src = cv.imread(tempCanvas);
+
+    let gray = new cv.Mat();
     cv.cvtColor(src,gray,cv.COLOR_RGBA2GRAY);
 
-    cv.GaussianBlur(gray,gray,new cv.Size(5,5),0);
+    cv.GaussianBlur(
+        gray,
+        gray,
+        new cv.Size(5,5),
+        0
+    );
 
-    let edges=new cv.Mat();
+    let edges = new cv.Mat();
 
-    cv.Canny(gray,edges,75,200);
+    cv.Canny(
+        gray,
+        edges,
+        75,
+        200
+    );
 
-    let contours=new cv.MatVector();
-
-    let hierarchy=new cv.Mat();
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
 
     cv.findContours(
         edges,
@@ -57,30 +83,32 @@ document.getElementById("process").onclick=function(){
         cv.CHAIN_APPROX_SIMPLE
     );
 
-    let biggest=null;
-    let maxArea=0;
+    let biggest = null;
+    let biggestArea = 0;
 
     for(let i=0;i<contours.size();i++){
 
-        let cnt=contours.get(i);
+        let cnt = contours.get(i);
 
-        let area=cv.contourArea(cnt);
+        let area = cv.contourArea(cnt);
 
-        if(area>maxArea){
+        if(area < 5000) continue;
 
-            let peri=cv.arcLength(cnt,true);
+        let peri = cv.arcLength(cnt,true);
 
-            let approx=new cv.Mat();
+        let approx = new cv.Mat();
 
-            cv.approxPolyDP(cnt,approx,0.02*peri,true);
+        cv.approxPolyDP(
+            cnt,
+            approx,
+            0.02*peri,
+            true
+        );
 
-            if(approx.rows===4){
+        if(approx.rows===4 && area>biggestArea){
 
-                biggest=approx;
-
-                maxArea=area;
-
-            }
+            biggestArea = area;
+            biggest = approx;
 
         }
 
@@ -88,7 +116,13 @@ document.getElementById("process").onclick=function(){
 
     if(biggest==null){
 
-        alert("No document found.");
+        alert("Document not detected.");
+
+        src.delete();
+        gray.delete();
+        edges.delete();
+        contours.delete();
+        hierarchy.delete();
 
         return;
 
@@ -99,36 +133,32 @@ document.getElementById("process").onclick=function(){
     for(let i=0;i<4;i++){
 
         pts.push({
+
             x:biggest.intPtr(i,0)[0],
             y:biggest.intPtr(i,0)[1]
+
         });
 
     }
 
-    pts.sort((a,b)=>a.y-b.y);
+    pts = sortCorners(pts);
 
-    let top=pts.slice(0,2).sort((a,b)=>a.x-b.x);
-
-    let bottom=pts.slice(2).sort((a,b)=>a.x-b.x);
-
-    let tl=top[0];
-    let tr=top[1];
-    let bl=bottom[0];
-    let br=bottom[1];
+    let tl=pts[0];
+    let tr=pts[1];
+    let br=pts[2];
+    let bl=pts[3];
 
     let width=Math.max(
 
-        Math.hypot(br.x-bl.x,br.y-bl.y),
-
-        Math.hypot(tr.x-tl.x,tr.y-tl.y)
+        distance(br,bl),
+        distance(tr,tl)
 
     );
 
     let height=Math.max(
 
-        Math.hypot(tr.x-br.x,tr.y-br.y),
-
-        Math.hypot(tl.x-bl.x,tl.y-bl.y)
+        distance(tr,br),
+        distance(tl,bl)
 
     );
 
@@ -137,10 +167,15 @@ document.getElementById("process").onclick=function(){
         1,
         cv.CV_32FC2,
         [
+
             tl.x,tl.y,
+
             tr.x,tr.y,
+
             br.x,br.y,
+
             bl.x,bl.y
+
         ]
     );
 
@@ -149,31 +184,164 @@ document.getElementById("process").onclick=function(){
         1,
         cv.CV_32FC2,
         [
+
             0,0,
+
             width,0,
+
             width,height,
+
             0,height
+
         ]
     );
 
-    let M=cv.getPerspectiveTransform(srcTri,dstTri);
+    let M=cv.getPerspectiveTransform(
+        srcTri,
+        dstTri
+    );
 
     let dst=new cv.Mat();
 
     cv.warpPerspective(
+
         src,
         dst,
         M,
         new cv.Size(width,height)
+
     );
 
-    cv.imshow("canvasOutput",dst);
+    createResult(dst);
 
     src.delete();
     gray.delete();
     edges.delete();
     contours.delete();
     hierarchy.delete();
-    dst.delete();
 
 }
+
+// ----------------------
+// Display Result
+// ----------------------
+
+function createResult(mat){
+
+    const wrapper=document.createElement("div");
+    wrapper.className="page";
+
+    const canvas=document.createElement("canvas");
+
+    canvas.width=mat.cols;
+    canvas.height=mat.rows;
+
+    wrapper.appendChild(canvas);
+
+    const remove=document.createElement("button");
+
+    remove.innerText="Delete";
+
+    remove.onclick=()=>{
+
+        wrapper.remove();
+
+        scannedPages=scannedPages.filter(p=>p!==canvas);
+
+    };
+
+    wrapper.appendChild(remove);
+
+    results.appendChild(wrapper);
+
+    cv.imshow(canvas,mat);
+
+    scannedPages.push(canvas);
+
+    mat.delete();
+
+}
+
+// ----------------------
+// Utilities
+// ----------------------
+
+function distance(a,b){
+
+    return Math.hypot(
+
+        a.x-b.x,
+
+        a.y-b.y
+
+    );
+
+}
+
+function sortCorners(pts){
+
+    let sum=pts.map(p=>p.x+p.y);
+
+    let diff=pts.map(p=>p.y-p.x);
+
+    let tl=pts[sum.indexOf(Math.min(...sum))];
+
+    let br=pts[sum.indexOf(Math.max(...sum))];
+
+    let tr=pts[diff.indexOf(Math.min(...diff))];
+
+    let bl=pts[diff.indexOf(Math.max(...diff))];
+
+    return [
+
+        tl,
+
+        tr,
+
+        br,
+
+        bl
+
+    ];
+
+}
+
+// ----------------------
+// Clear
+// ----------------------
+
+clearBtn.onclick=()=>{
+
+    scannedPages=[];
+
+    results.innerHTML="";
+
+};
+
+// ----------------------
+// Download Images
+// ----------------------
+
+downloadBtn.onclick=()=>{
+
+    if(scannedPages.length===0){
+
+        alert("No pages scanned.");
+
+        return;
+
+    }
+
+    scannedPages.forEach((canvas,index)=>{
+
+        const a=document.createElement("a");
+
+        a.download=`page-${index+1}.png`;
+
+        a.href=canvas.toDataURL("image/png");
+
+        a.click();
+
+    });
+
+};
