@@ -3,59 +3,126 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
 
-    <title>Document Scanner</title>
+<title>AI Document Scanner</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 
-    <!-- OpenCV -->
-    <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+<!-- OpenCV -->
+<script async
+src="https://docs.opencv.org/4.x/opencv.js">
+</script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 
 <body>
 
-<div class="container">
+<header>
 
-    <h1>📄 Document Scanner</h1>
+<h1>
 
-    <p class="subtitle">
-        Upload one or more images and automatically crop documents.
-    </p>
+📄 AI Document Scanner
 
-    <div class="upload-box">
+</h1>
 
-        <input
-            type="file"
-            id="upload"
-            accept="image/*"
-            multiple>
+</header>
 
-    </div>
+<main>
 
-    <div class="buttons">
+<div class="toolbar">
 
-        <button id="clearBtn">
-            🗑 Clear All
-        </button>
+<label class="btn">
 
-        <button id="downloadBtn">
-            ⬇ Download Images
-        </button>
+📂 Select Images
 
-    </div>
+<input
+type="file"
+id="galleryInput"
+accept="image/*"
+multiple
+hidden>
 
-    <h2>Scanned Pages</h2>
+</label>
 
-    <div id="results"></div>
+<button
+id="cameraBtn"
+class="btn">
+
+📷 Camera
+
+</button>
+
+<button
+id="clearBtn"
+class="btn danger">
+
+🗑 Clear
+
+</button>
+
+<button
+id="pdfBtn"
+class="btn success">
+
+📄 Download PDF
+
+</button>
 
 </div>
 
-<script src="script.js"></script>
+<section
+id="cameraSection"
+class="hidden">
+
+<video
+id="video"
+autoplay
+playsinline>
+
+</video>
+
+<div class="cameraButtons">
+
+<button
+id="captureBtn">
+
+Capture
+
+</button>
+
+<button
+id="closeCamera">
+
+Close
+
+</button>
+
+</div>
+
+</section>
+
+<section id="pages">
+
+</section>
+
+</main>
+
+<script src="utils.js"></script>
+
+<script src="scanner.js"></script>
+
+<script src="camera.js"></script>
+
+<script src="pdf.js"></script>
+
+<script src="app.js"></script>
 
 </body>
 
