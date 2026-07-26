@@ -5,7 +5,18 @@ let image=new Image();
 
 document.getElementById("upload").addEventListener("change",e=>{
 
-    const file=e.target.files[0];
+    const files = e.target.files;
+
+    for (const file of files) {
+        const img = new Image();
+    
+        img.onload = () => {
+            // Process this image
+            processImage(img);
+        };
+    
+        img.src = URL.createObjectURL(file);
+    }
 
     image.src=URL.createObjectURL(file);
 
